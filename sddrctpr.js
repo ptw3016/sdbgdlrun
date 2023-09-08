@@ -1,0 +1,117 @@
+const { SmartThingsClient, BearerTokenAuthenticator } = require('@smartthings/core-sdk')
+require("dotenv").config();
+
+const SMTPSTK = process.env.SMTPSTK;
+const client = new SmartThingsClient(new BearerTokenAuthenticator(SMTPSTK))
+
+const sdbgdrsr_dvId = process.env.sdbgdrsr_dvId;  //별관도어락센서
+const sdbgdrfbon_dvId = process.env.sdbgdrfbon_dvId; //별관도어락fbt ON
+const sdbgdrfboff_dvId = process.env.sdbgdrfboff_dvId; //별관도어락fbt OFF
+
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
+async function smtbgdldvcPr(drctval) {     //
+    if(drctval=="open" || drctval=="closed"){
+    }else{
+        console.log("제어 value가 유효하지않음 종료!")
+        return;
+    }
+    var devicesget = await client.devices.get(sdbgdrsr_dvId)
+    const doorctval = drctval;
+    //console.log(devicesget.label+" "+doorctval + " 실행중..."); //장치이름 조회하기
+
+    try {
+        const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
+        const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
+        console.log("현재상태확인:"+rtgetresult);
+
+        return;
+        if(rtgetresult==doorctval){
+            console.log("현재상태가 '"+doorctval+"' 이므로 실행없이 종료!");
+            return;
+        }
+
+        var totalct = 6  //fbt 최대 실행 횟수
+        for (let i = 1; i <= totalct; i++) {
+            var fbrunrst = await sdbgfbonoffPr();
+            //console.log("fbt on/off " + i + "번째 요청결과_ on : " + fbrunrst.on + ", off : " + fbrunrst.off);
+            if (fbrunrst.on == "0000" && fbrunrst.off == "0000") {
+                await sleep(1500);  //딜레이 있을 수 있으니 1초 후 검사!
+                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 10, doorctval);
+                console.log(`-장치 요청결과 : '${result}' 확인.`);
+                if (result === doorctval) {
+                    console.log(i + "/" + totalct + "번만에 원하는 값 " + doorctval + " 나왔음! 종료합니다.");
+                    return;
+                }else{
+                    console.log(i+"/"+totalct+"번째 실행 후 상태 확인실패 다시시도!");
+                }
+            }else{
+                console.log(i+"번째 요청실패! 다시시도!");
+            }
+            if (i === totalct) {
+                console.log(`문열기를 못했습니다. 원하는 상태(${doorctval})를 받아오지 못했습니다. 최대 시도 횟수 초과`);
+                return;
+            }
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+async function retryUntilValue_dltb(dvid, maxAttempts, targetValue) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        const getstatus = await client.devices.getStatus(dvid);
+        const result = getstatus.components.main.contactSensor.contact.value;
+
+        if (result === targetValue) {
+            return result; 
+        }
+
+        if (attempt === maxAttempts) {
+            return "";
+        }
+
+        await sleep(100); 
+    }
+}
+
+async function sdbgfbonoffPr() {
+    const cmdstr = "on"  //ON 제어스위치
+    const cmdstr2 = "on"  //OFF 제어스위치
+
+    const deviceConfig = {
+        component: 'main',
+        capability: "switch",
+        command: cmdstr
+    }
+    const deviceConfig2 = {
+        component: 'main',
+        capability: "switch",
+        command: cmdstr2
+    }
+
+    var ectecmd = await client.devices.executeCommand(sdbgdrfbon_dvId, deviceConfig);
+    var ectecmdrst = ectecmd.results[0].status;
+    await sleep(1000);
+
+    var ectecmd2 = await client.devices.executeCommand(sdbgdrfboff_dvId, deviceConfig2);
+    var ectecmd2rst = ectecmd2.results[0].status;
+    if (ectecmdrst == "ACCEPTED" && ectecmd2rst == "ACCEPTED") {
+        return { on: "0000", off: "0000" }; //
+    } else if (ectecmdrst == "ACCEPTED" && ectecmd2rst != "ACCEPTED") {
+        return { on: "0000", off: "0001" };
+    } else if (ectecmdrst != "ACCEPTED" && ectecmd2rst == "ACCEPTED") {
+        return { on: "0001", off: "0000" };
+    } else {
+        return { on: "0001", off: "0001" };
+    }
+}
+
+//smtbgdldvcPr("open");  //확인용 스위치도 만들기!
+
+
+module.exports = { smtbgdldvcPr };
