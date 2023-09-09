@@ -1,4 +1,7 @@
 const { SmartThingsClient, BearerTokenAuthenticator } = require('@smartthings/core-sdk')
+const { OAuth2Client } = require('google-auth-library');
+const nodemailer = require("nodemailer");
+
 require("dotenv").config();
 
 const SMTPSTK = process.env.SMTPSTK;
@@ -7,6 +10,11 @@ const client = new SmartThingsClient(new BearerTokenAuthenticator(SMTPSTK))
 const sdbgdrsr_dvId = process.env.sdbgdrsr_dvId;  //별관도어락센서
 const sdbgdrfbon_dvId = process.env.sdbgdrfbon_dvId; //별관도어락fbt ON
 const sdbgdrfboff_dvId = process.env.sdbgdrfboff_dvId; //별관도어락fbt OFF
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET= process.env.CLIENT_SECRET;
+const REDIRECT_URI= process.env.REDIRECT_URI;
+const REFRESH_TOKEN= process.env.REFRESH_TOKEN;
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -112,6 +120,35 @@ async function sdbgfbonoffPr() {
 }
 
 //smtbgdldvcPr("open");  //확인용 스위치도 만들기!
+async function sendemailPr(sendemjson) {
+    const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    authClient.setCredentials({ refresh_token: REFRESH_TOKEN });
+  
+    var to = sendemjson.to;
+    var subject = sendemjson.subject;
+    var message = sendemjson.message;
+  
+    const accessToken = await authClient.getAccessToken();
+    const transport = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            type: 'OAuth2',
+            user: process.env.sdadmingmml,
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken,
+        },
+    });
+    const mailOptions = {
+        from: '"테스트" <' + process.env.sdadminnvml + '>', // 발신자 정보
+        to: to, // 수신자 정보
+        subject: subject, // 제목
+        text: message, // 내용 (텍스트)
+        //html: "<b>html-이메일 테스트중</b>", // 내용 (HTML)
+    };
+    const result = await transport.sendMail(mailOptions);
+    //console.log(result);
+  }
 
-
-module.exports = { smtbgdldvcPr };
+module.exports = { smtbgdldvcPr,sendemailPr };

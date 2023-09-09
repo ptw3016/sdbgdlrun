@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sddrctpr = require("./sddrctpr");
 const app = express();
+
 const port = 3000;
 require("dotenv").config();
 const rturl = process.env.rturl;
@@ -22,10 +23,25 @@ app.post('/submit', (req, res) => {
   if (body.enteredCode == "123456") {
     res.json({ message: '비밀번호 일치!.' });
     try {
+      var sendemjson = {
+        to: process.env.sdadminnvml,
+        subject: "제목",
+        message: "내용"
+      }
       sddrctpr.smtbgdldvcPr("open");
+      sddrctpr.sendemailPr(sendemjson);
+
     } catch (e) {
-      console.log(e.message);
-      console.log(e.stack);
+      var sendemjson = {
+        to: process.env.sdadminnvml,
+        subject: "제목",
+        message: "----errormsg----\n" +
+          e.message + "\n" +
+          "----errorstack----\n" +
+          e.stack + "\n";
+      }
+   
+      sddrctpr.sendemailPr(sendemjson);
     }
 
   } else {
@@ -36,3 +52,4 @@ app.post('/submit', (req, res) => {
 app.listen(port, () => {
   console.log(`sddlpr 서버 실행 중...`);
 });
+
