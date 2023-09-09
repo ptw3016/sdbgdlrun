@@ -5,8 +5,6 @@ const app = express();
 
 const port = 3000;
 require("dotenv").config();
-const rturl = process.env.rturl;
-const rturlad = "/" + rturl;
 
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(bodyParser.json());
@@ -38,7 +36,7 @@ app.post('/submit', (req, res) => {
         message: "----errormsg----\n" +
           e.message + "\n" +
           "----errorstack----\n" +
-          e.stack + "\n";
+          e.stack + "\n"
       }
    
       sddrctpr.sendemailPr(sendemjson);
