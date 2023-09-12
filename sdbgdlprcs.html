@@ -28,7 +28,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
             pointer-events: none;
             z-index: -1;
         }
@@ -87,6 +87,11 @@
                 transform: rotate(360deg);
             }
         }
+
+        .custom-text-size {
+            font-size: 15px;
+            /* 원하는 크기로 설정 */
+        }
     </style>
 </head>
 
@@ -100,7 +105,7 @@
         <img src="https://sharpdrum.co.kr/wp-content/uploads/2023/09/sdlogowhite.png" alt="로고" class="logo">
     </div>
 
-    <div class="mb-4 text-lg font-light text-white"> <!-- 폰트 크기 및 간격 수정 -->
+    <div class="mb-4 text-2xl font-light text-white"> <!-- 폰트 크기 및 간격 수정 -->
         도어락 암호입력
     </div>
     <div class="mb-4"></div>
@@ -117,7 +122,7 @@
 
         <div class="mb-7"></div>
         <div class="blind-layer"></div>
-        <div class="grid grid-cols-3 gap-5 mt-2"> <!-- 그리드 컬럼과 간격 수정 -->
+        <div class="grid grid-cols-3 gap-6 mt-2"> <!-- 그리드 컬럼과 간격 수정 -->
             <div class="relative">
                 <button
                     class="w-16 h-16 rounded-full border-none focus:outline-none bg-white bg-opacity-20 text-white text-2xl"
@@ -182,8 +187,35 @@
                     onclick="backclearCircle()">삭제</button>
             </div>
         </div>
-
-
+        <div class="mb-7"></div>
+      
+        <div class="flex mt-2 mb-2"> <!-- 간격 조정 -->
+            <div id="circl" class="flex items-center w-30 h-8 bg-white rounded-full mx-2 shadow">
+                <span class="ml-2 font-bold">도어락상태&nbsp</span>
+                <div id="dlstate" class="w-15 h-6 border border-black rounded-full mr-2" style="background-color: chartreuse;">
+                    <span class="ml-2 mr-2 font-bold text-sm">열림</span>
+                </div>
+            </div>
+        </div>
+        
+        
+          
+    </div>
+    <!-- 모달 -->
+    <div id="myModal" class="modal fixed w-full h-full top-0 left-0 flex items-center justify-center hidden">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded-xl shadow-lg z-50 overflow-y-auto">
+            <!-- 모달 내용 -->
+            <div class="modal-content py-4 text-left px-6">
+                <div class="flex justify-between items-center pb-3">
+                    <p class="text-2xl font-bold">결과</p>
+                    <div class="modal-close cursor-pointer z-50">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </div>
+                </div>
+                <div id="modal-body"></div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -200,6 +232,8 @@
         let enteredCode = "";
         let currentIndex = 0;
         const loadingScreen = document.getElementById('loading');
+        const dlstate = document.getElementById('dlstate');
+
 
         function flashButton(button, number) {
             button.style.backgroundColor = "rgba(255, 255, 255, 0.7)"; // 
@@ -241,7 +275,18 @@
                 .then((data) => {
                     // 서버로부터 받은 응답을 처리
                     loadingScreen.style.display = 'none';
-                    alert("서버 응답: " + JSON.stringify(data));
+                    dlstate.style.backgroundColor = 'red';
+                    //alert("서버 응답: " + JSON.stringify(data));
+                    const rststring = JSON.stringify(data);
+                    const rststr = rststring.message;
+
+                    const modalContent = `
+                    <p class="text-xl">${data.message}<br>
+                    <span class="font-bold custom-text-size">${data.admsg}</span></p>
+      <button onclick="closeModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">닫기</button>
+    `;
+
+                    openModal(modalContent);
                     clearCircles();
                 });
         }
@@ -259,10 +304,7 @@
             currentIndex = 0;
         }
 
-
-
         function backclearCircle() {
-
             if (currentIndex > 0) {
                 const circle2 = document.getElementById(`circle${currentIndex}`);
                 currentIndex--;
@@ -273,8 +315,22 @@
                 var newStr = enteredCode.slice(0, currentIndex)
                 enteredCode = newStr;
             }
-
         }
+
+        // 모달 열기 함수
+        function openModal(content) {
+            const modal = document.getElementById('myModal');
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = content;
+            modal.classList.remove('hidden');
+        }
+
+        // 모달 닫기 함수
+        function closeModal() {
+            const modal = document.getElementById('myModal');
+            modal.classList.add('hidden');
+        }
+
 
     </script>
 </body>
