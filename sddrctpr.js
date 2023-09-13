@@ -25,11 +25,32 @@ function sleep(ms) {
     });
 }
 
+async function smtbgdlstatePr() {
+
+    try {
+        const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
+        const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
+        //console.log("현재상태확인:" + rtgetresult);
+
+        return rtgetresult;
+    } catch (e) {
+        console.error(error.message);
+        var sendemjson = {
+            to: process.env.sdadminnvml,
+            subject: "sdbgdlstate 실행중 error",
+            message: "----errormsg----\n" +
+                error.message + "\n" +
+                "----errorstack----\n" +
+                error.stack + "\n"
+        }
+        sendemailPr(sendemjson);
+    }
+}
 async function smtbgdldvcPr(drctval) {     //
     if (drctval == "open" || drctval == "closed") {
     } else {
         console.log("제어 value가 유효하지않음 종료!")
-        return;
+        return { result: "0003", state: "" };
     }
     var devicesget = await client.devices.get(sdbgdrsr_dvId)
     const doorctval = drctval;
@@ -43,10 +64,10 @@ async function smtbgdldvcPr(drctval) {     //
         //return;
         if (rtgetresult == doorctval) {
             console.log("현재상태가 '" + doorctval + "' 이므로 실행없이 종료!");
-            return { result: "0001" };
+            return { result: "0001", state: doorctval };
         }
-        return { result: "0000" };
-        //return;
+        //return { result: "0000" };
+
         var totalct = 6  //fbt 최대 실행 횟수
         for (let i = 1; i <= totalct; i++) {
             var fbrunrst = await sdbgfbonoffPr();
@@ -57,7 +78,7 @@ async function smtbgdldvcPr(drctval) {     //
                 console.log(`-장치 요청결과 : '${result}' 확인.`);
                 if (result === doorctval) {
                     console.log(i + "/" + totalct + "번만에 원하는 값 " + doorctval + " 나왔음! 종료합니다.");
-                    return { result: "0000" };
+                    return { result: "0000", state: doorctval };
                 } else {
                     console.log(i + "/" + totalct + "번째 실행 후 상태 확인실패 다시시도!");
                 }
@@ -66,7 +87,7 @@ async function smtbgdldvcPr(drctval) {     //
             }
             if (i === totalct) {
                 console.log(`문열기를 못했습니다. 원하는 상태(${doorctval})를 받아오지 못했습니다. 최대 시도 횟수 초과`);
-                return { result: "0002" };
+                return { result: "0002", state: doorctval };
             }
         }
     } catch (error) {
@@ -192,4 +213,4 @@ async function chkpasscd(timechk, pcchk) {
 
 //smtbgdldvcPr("open");
 //chkpasscd();
-module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd };
+module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd,smtbgdlstatePr };
