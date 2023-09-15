@@ -373,30 +373,30 @@
         var button = document.getElementById("circl");
         function drlcclsePr() {
             var rstclose = confirm("도어락 close 실행하시겠습니까?");
-            if(rstclose){
+            if (rstclose) {
                 loadingScreen.style.display = 'flex';
-            fetch('/sdddrclose', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({}), // 입력한 코드를 JSON으로 전송합니다.
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    loadingScreen.style.display = 'none';
-                    const rststatechk = data.drstate;
-                    
-                    const circl2chk = document.getElementById('circl2');
-                    
-                    if (rststatechk == "open") {
-                        circl2chk.innerHTML = `<i class='fa-solid fa-lock-open mr-2 text-green-600 text-xl'></i>`;
-                    } else if (rststatechk == "closed") {
-                        circl2chk.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
-                    }
-                    
-                    alert(data.message+" /현재상태:"+rststatechk);
-                });
+                fetch('/sdddrclose', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({}), // 입력한 코드를 JSON으로 전송합니다.
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        loadingScreen.style.display = 'none';
+                        const rststatechk = data.drstate;
+
+                        const circl2chk = document.getElementById('circl2');
+
+                        if (rststatechk == "open") {
+                            circl2chk.innerHTML = `<i class='fa-solid fa-lock-open mr-2 text-green-600 text-xl'></i>`;
+                        } else if (rststatechk == "closed") {
+                            circl2chk.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
+                        }
+
+                        alert(data.message + " /현재상태:" + rststatechk);
+                    });
             }
         }
 
@@ -410,6 +410,25 @@
             });
 
             button.addEventListener("mouseleave", function () {
+                clearTimeout(pressTimer);
+            });
+        });
+
+        // 버튼을 터치했을 때 실행되는 함수
+        button.addEventListener("touchstart", function (event) {
+            event.preventDefault(); // 기본 터치 동작을 중지하여 텍스트 선택을 방지합니다.
+
+            // 1초(1000 밀리초) 후에 길게 터치했는지 확인
+            var pressTimer = setTimeout(function () {
+                drlcclsePr();
+            }, 5000); // 
+
+            button.addEventListener("touchend", function () {
+                clearTimeout(pressTimer);
+            });
+
+            button.addEventListener("touchcancel", function () {
+                // 영역을 벗어났으므로 타이머를 클리어합니다.
                 clearTimeout(pressTimer);
             });
         });
