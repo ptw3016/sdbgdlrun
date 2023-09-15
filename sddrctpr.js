@@ -137,7 +137,7 @@ async function retryUntilValue_dltb(dvid, maxAttempts, targetValue) {
             return "";
         }
 
-        await sleep(500);
+        await sleep(1000);
     }
 }
 
