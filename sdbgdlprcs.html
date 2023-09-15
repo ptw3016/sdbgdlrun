@@ -106,13 +106,13 @@
         <img src="https://sharpdrum.co.kr/wp-content/uploads/2023/09/sdlogowhite.png" alt="로고" class="logo">
     </div>
     <div class="mb-4 text-2xl font-light text-white"> <!-- 폰트 크기 및 간격 수정 -->
-       도어락 암호입력
+        도어락 암호입력
     </div>
     <div class="mb-4"></div>
 
     <div class="flex items-center flex-col">
-        <div class="flex mb-2"> <!-- 간격 조정 -->  
-            
+        <div class="flex mb-2"> <!-- 간격 조정 -->
+
             <div id="circle1" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
             <div id="circle2" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
             <div id="circle3" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
@@ -124,7 +124,7 @@
             <div id="circle3" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
             <div id="circle4" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
             <div id="circle5" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle6" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div> --> 
+            <div id="circle6" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div> -->
         </div>
 
         <div class="mb-7"></div>
@@ -197,11 +197,11 @@
         <div class="mb-7"></div>
 
         <div class="flex mt-2 mb-2"> <!-- 간격 조정 -->
-            <div id="circl" class="flex items-center w-30 h-8 bg-white rounded-full mx-2 shadow"
+            <button id="circl" class="flex items-center w-30 h-8 bg-white rounded-full mx-2 shadow"
                 style="padding-right: 10px; padding-left: 10px; padding-top: 20px; padding-bottom: 20px;">
                 <span class="ml-2 font-bold" style="display: flex; align-items: center; height: 100%;">도어락상태&nbsp</span>
                 <div id="circl2"><i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></div>
-            </div>
+            </button>
         </div>
     </div>
     </div>
@@ -256,7 +256,7 @@
                 const circle = document.getElementById(`circle${currentIndex + 1}`);
                 if (circle) {
                     //circle.style.backgroundColor = "white"; // 
-                    circle.innerHTML="<i class='fa-solid fa-drum text-2xl text-lime-200' style='color:#e7d727;'></i>";
+                    circle.innerHTML = "<i class='fa-solid fa-drum text-2xl text-lime-200' style='color:#e7d727;'></i>";
                 }
                 enteredCode += circleNumber;
                 currentIndex++;
@@ -341,7 +341,7 @@
             for (let i = 1; i <= 6; i++) {
                 const circle = document.getElementById(`circle${i}`);
                 if (circle) {
-                    circle.innerHTML="<i class='fa-solid fa-drum text-2xl text-white'></i>";
+                    circle.innerHTML = "<i class='fa-solid fa-drum text-2xl text-white'></i>";
                 }
             }
             enteredCode = "";
@@ -352,13 +352,12 @@
             if (currentIndex > 0) {
                 const circle2 = document.getElementById(`circle${currentIndex}`);
                 currentIndex--;
-                circle2.innerHTML="<i class='fa-solid fa-drum text-2xl text-white'></i>";
+                circle2.innerHTML = "<i class='fa-solid fa-drum text-2xl text-white'></i>";
                 var newStr = enteredCode.slice(0, currentIndex)
                 enteredCode = newStr;
             }
         }
 
-        // 모달 열기 함수
         function openModal(content) {
             const modal = document.getElementById('myModal');
             const modalBody = document.getElementById('modal-body');
@@ -366,11 +365,54 @@
             modal.classList.remove('hidden');
         }
 
-        // 모달 닫기 함수
         function closeModal() {
             const modal = document.getElementById('myModal');
             modal.classList.add('hidden');
         }
+
+        var button = document.getElementById("circl");
+        function drlcclsePr() {
+            var rstclose = confirm("도어락 close 실행하시겠습니까?");
+            if(rstclose){
+                loadingScreen.style.display = 'flex';
+            fetch('/sdddrclose', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}), // 입력한 코드를 JSON으로 전송합니다.
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    loadingScreen.style.display = 'none';
+                    const rststatechk = data.drstate;
+                    
+                    const circl2chk = document.getElementById('circl2');
+                    
+                    if (rststatechk == "open") {
+                        circl2chk.innerHTML = `<i class='fa-solid fa-lock-open mr-2 text-green-600 text-xl'></i>`;
+                    } else if (rststatechk == "closed") {
+                        circl2chk.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
+                    }
+                    
+                    alert(data.message+" /현재상태:"+rststatechk);
+                });
+            }
+        }
+
+        button.addEventListener("mousedown", function () {
+            var pressTimer = setTimeout(function () {
+                drlcclsePr();
+            }, 5000); //
+
+            button.addEventListener("mouseup", function () {
+                clearTimeout(pressTimer);
+            });
+
+            button.addEventListener("mouseleave", function () {
+                clearTimeout(pressTimer);
+            });
+        });
 
 
     </script>
