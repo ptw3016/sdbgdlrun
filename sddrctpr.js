@@ -81,7 +81,7 @@ async function smtbgdldvcPr(drctval) {     //
             //console.log("fbt on/off " + i + "번째 요청결과_ on : " + fbrunrst.on + ", off : " + fbrunrst.off);
             if (fbrunrst.on == "0000" && fbrunrst.off == "0000") {
                 await sleep(1000);  //딜레이 있을 수 있으니 1초 후 검사!
-                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 15, doorctval);
+                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 20, doorctval);
                 console.log(`-장치 요청결과 : '${result}' 확인.`);
                 if (result === doorctval) {
                     console.log(i + "/" + totalct + "번만에 원하는 값 " + doorctval + " 나왔음! 종료합니다.");
@@ -137,7 +137,7 @@ async function retryUntilValue_dltb(dvid, maxAttempts, targetValue) {
             return "";
         }
 
-        await sleep(1000);
+        await sleep(1500);
     }
 }
 
