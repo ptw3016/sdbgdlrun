@@ -18,6 +18,8 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 const REFRESH_TOKEN2 = process.env.REFRESH_TOKEN2;
 const SHEET_ID = process.env.SHEET_ID;
+const LogSt_NM = process.env.LogSt_NM;
+const SdTitle=process.env.SdTitle;
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -66,7 +68,7 @@ async function smtbgdldvcPr(drctval) {     //
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
         const getrttime = await getCurrentTime();
         console.log("현재(" + getrttime + ")상태확인:" + rtgetresult);
-        console.log(drctval+"! 요청실행중...");
+        console.log(drctval + "! 요청실행중...");
 
         //return;
         if (rtgetresult == doorctval) {
@@ -195,7 +197,7 @@ async function sendemailPr(sendemjson) {
         },
     });
     const mailOptions = {
-        from: '"샵드럼" <' + process.env.sdadminnvml + '>', // 발신자 정보
+        from: SdTitle+' <' + process.env.sdadminnvml + '>', // 발신자 정보
         to: to, // 수신자 정보
         subject: subject, // 제목
         text: message, // 내용 (텍스트)
@@ -222,15 +224,17 @@ async function chkpasscd(timechk, pcchk) {
         const values = response.data.values;
         let chkrst = false;
         let chkrstnm = "";
+        let chkrstlv = "";
         for (var i = 0; i < values.length; i++) {
             if (values[i][2] == pcchk) {
                 chkrst = true;
                 chkrstnm = values[i][1];
+                chkrstlv = values[i][6];
                 //console.log("일치항목 체크확인!:"+values[0][2]);
 
             }
         }
-        return { chkrst: chkrst, chkrstnm: chkrstnm };
+        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv:chkrstlv };
     } catch (error) {
         console.error(error.message);
         var sendemjson = {
@@ -280,17 +284,49 @@ async function getCurrentTime() {
     return `${year}-${month}-${day}(${dayOfWeek}) ${amPm} ${formattedHours}:${minutes}`;
 }
 
+async function sddrctlogappend(VALUES) {
+    const RANGE = `${LogSt_NM}!A:E`; // ex) Sheet1!A1:B2  //한글도가능
 
-function addLeadingZero(number) {
-    // 숫자가 10보다 작으면 앞에 0을 추가합니다.
-    if (number < 10) {
-        return '0' + number;
+    const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    authClient.setCredentials({ refresh_token: REFRESH_TOKEN2 });
+    const sheets = google.sheets({ version: 'v4', auth: authClient });
+    try {
+
+        const response = await sheets.spreadsheets.values.append({
+            spreadsheetId: SHEET_ID,
+            //spreadsheetName: SHEET_NAME,
+            range: RANGE,
+            valueInputOption: 'USER_ENTERED',
+            resource: { values: VALUES },
+        });
+        console.log(`시트에 행이 추가되었습니다.`);
+
+        // const response = await sheets.spreadsheets.values.get({  //sheet get!
+        //   spreadsheetId,
+        //   range: `${sheetName}!${range}`,
+        // });
+
+    } catch (e) {
+
+        console.error(e);
+        var emailsubject = "sddrctpr Log 시트에 추가중 에러발생!!";
+        var emailcontent = "sddrctpr Log 시트에 추가중 에러발생!!\n" +
+
+            "-----error msg-----\n" +
+            e.message + "\n" +
+            "-----error stack-----\n" +
+            e.stack;
+
+        var sendemjson = {
+            to: process.env.sdadminnvml,
+            subject: emailsubject,
+            message: emailcontent
+        }
+        //메일 전송
+        sendemailPr(sendemjson); // 이메일 전송
     }
-    // 그렇지 않으면 입력된 숫자를 그대로 반환합니다.
-    else {
-        return number.toString();
-    }
+
 }
 //smtbgdldvcPr("open");
 //chkpasscd();
-module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime };
+module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend };
