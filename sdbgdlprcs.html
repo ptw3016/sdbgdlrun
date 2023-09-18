@@ -29,8 +29,8 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(7px);
-            -webkit-backdrop-filter: blur(7px);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             /* 추가 */
             pointer-events: none;
             z-index: -1;
@@ -329,6 +329,7 @@
                     <p class="text-xl font-bold text-center">${data.message}<br>
                     <span class="font-light custom-text-size text-center">${data.admsg}</span></p>`;
 
+                    vibrate();
                     openModal(modalContent);
                     const circl2 = document.getElementById('circl2');
                     if (rststate == "open") {
@@ -398,6 +399,8 @@
                             circl2chk.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
                         }
 
+                        vibrate();
+
                         alert(data.message + " /현재상태:" + rststatechk);
                     });
             }
@@ -435,6 +438,24 @@
                 clearTimeout(pressTimer);
             });
         });
+
+        function vibrate() {
+            // 진동 효과를 주려면 Vibration API를 사용합니다.
+            if ("vibrate" in navigator) {
+                // 진동 효과를 설정합니다. 배열의 각 요소는 진동 및 일시 중단 시간을 나타냅니다.
+                // 예: [진동시간(ms), 일시 중단 시간(ms), 진동시간(ms), 일시 중단 시간(ms), ...]
+                navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        function showAlertWithVibration() {
+            // 진동 효과를 주는 함수를 호출합니다.
+            vibrate();
+
+            // 원하는 내용의 alert을 표시합니다.
+            alert("이것은 진동 효과와 함께 표시되는 alert입니다.");
+        }
+
 
 
     </script>
