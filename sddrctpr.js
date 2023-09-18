@@ -31,7 +31,7 @@ async function smtbgdlstatePr() {
         let rstcode = {};
         const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
-        //console.log("현재상태확인:" + rtgetresult);
+        console.log("smt 현재상태확인:" + rtgetresult);
 
         return rtgetresult;
     } catch (e) {
@@ -65,7 +65,8 @@ async function smtbgdldvcPr(drctval) {     //
         const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
         const getrttime = await getCurrentTime();
-        console.log("현재("+getrttime+")상태확인:" + rtgetresult );
+        console.log("현재(" + getrttime + ")상태확인:" + rtgetresult);
+        console.log(drctval+"! 요청실행중...");
 
         //return;
         if (rtgetresult == doorctval) {
@@ -75,26 +76,26 @@ async function smtbgdldvcPr(drctval) {     //
         }
         //return { result: "0000" };
 
-        var totalct = 6  //fbt 최대 실행 횟수
+        var totalct = 1  //fbt 최대 실행 횟수
         for (let i = 1; i <= totalct; i++) {
             var fbrunrst = await sdbgfbonoffPr();
             //console.log("fbt on/off " + i + "번째 요청결과_ on : " + fbrunrst.on + ", off : " + fbrunrst.off);
             if (fbrunrst.on == "0000" && fbrunrst.off == "0000") {
-                await sleep(1000);  //딜레이 있을 수 있으니 1초 후 검사!
-                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 20, doorctval);
-                console.log(`-장치 요청결과 : '${result}' 확인.`);
-                if (result === doorctval) {
-                    console.log(i + "/" + totalct + "번만에 원하는 값 " + doorctval + " 나왔음! 종료합니다.");
+                await sleep(1200);  //딜레이 있을 수 있으니 1초 후 검사!
+                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 15, doorctval);
+                const attchk = result.attempt;
+                if (result.rst === doorctval) {
+                    console.log(`-장치 요청결과 : ${attchk}만에 '${result.rst}' 확인.`);
                     rstcode = { result: "0000", state: doorctval, tryct: i };
                     return rstcode;
                 } else {
-                    console.log(i + "/" + totalct + "번째 실행 후 상태 확인실패 다시시도!");
+                    console.log(`-장치 요청결과 : ${attchk}회 시도 후 확인실패!.`);
                 }
             } else {
                 console.log(i + "번째 요청실패! 다시시도!");
             }
             if (i === totalct) {
-                console.log(`문 ${doorctval}을 못했습니다. 원하는 상태(${doorctval})를 받아오지 못했습니다. 최대 시도 횟수(${totalct}) 초과`);
+                console.log(`문 ${doorctval}을 못했습니다. 최대 시도 횟수(${totalct})`);
                 rstcode = { result: "0002", state: doorctval, tryct: "" };
                 return rstcode;
             }
@@ -130,14 +131,14 @@ async function retryUntilValue_dltb(dvid, maxAttempts, targetValue) {
         const result = getstatus.components.main.contactSensor.contact.value;
 
         if (result === targetValue) {
-            return result;
+            return { rst: result, attempt: attempt }
         }
 
         if (attempt === maxAttempts) {
-            return "";
+            return { rst: "", attempt: attempt }
         }
 
-        await sleep(1500);
+        await sleep(1100);
     }
 }
 
@@ -158,7 +159,7 @@ async function sdbgfbonoffPr() {
 
     var ectecmd = await client.devices.executeCommand(sdbgdrfbon_dvId, deviceConfig);
     var ectecmdrst = ectecmd.results[0].status;
-    await sleep(1000);
+    await sleep(1100);
 
     var ectecmd2 = await client.devices.executeCommand(sdbgdrfboff_dvId, deviceConfig2);
     var ectecmd2rst = ectecmd2.results[0].status;
