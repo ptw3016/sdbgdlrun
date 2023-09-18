@@ -331,7 +331,7 @@
                     <p class="text-xl font-bold text-center">${data.message}<br>
                     <span class="font-light custom-text-size text-center">${data.admsg}</span></p>`;
 
-                    vibrate();
+          
                     openModal(modalContent);
                     const circl2 = document.getElementById('circl2');
                     if (rststate == "open") {
@@ -401,7 +401,6 @@
                             circl2chk.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
                         }
 
-                        vibrate();
 
                         alert(data.message + " /현재상태:" + rststatechk);
                     });
@@ -440,32 +439,7 @@
                 clearTimeout(pressTimer);
             });
         });
-        // 작동되는 진동 메소드가 다르므로 통합
-        navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
-
-        function vibrate() {
-            // 진동 효과를 주려면 Vibration API를 사용합니다.
-            //if ("vibrate" in navigator) {
-            // 진동 효과를 설정합니다. 배열의 각 요소는 진동 및 일시 중단 시간을 나타냅니다.
-            // 예: [진동시간(ms), 일시 중단 시간(ms), 진동시간(ms), 일시 중단 시간(ms), ...]
-            //  navigator.vibrate([200, 100, 200]);
-            //}
-            if (navigator.vibrate) {
-                navigator.vibrate(5000); // 진동을 울리게 한다. 1000ms = 1초
-            }
-            else {
-                alert("진동을 지원하지 않는 기종 입니다.");
-            }
-        }
-
-        function showAlertWithVibration() {
-            // 진동 효과를 주는 함수를 호출합니다.
-            vibrate();
-
-            // 원하는 내용의 alert을 표시합니다.
-            alert("이것은 진동 효과와 함께 표시되는 alert입니다.");
-        }
-
+    
 
 
     </script>
