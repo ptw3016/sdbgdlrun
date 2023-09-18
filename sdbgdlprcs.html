@@ -14,25 +14,25 @@
     <style>
         body {
             position: relative;
-            background-image: url('https://sharpdrum.co.kr/wp-content/uploads/2022/04/꾸미기vlcsnap-2022-04-12-15h59m49s892-1.jpg');
-            background-size: cover;
             background-position: center;
             margin: 0;
             touch-action: manipulation;
             /* 페이지 전체의 마진을 제거합니다. */
         }
 
-        .blind-layer {
-            position: absolute;
+        body::before {
+            content: "";
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-image: url('https://sharpdrum.co.kr/wp-content/uploads/2022/04/꾸미기vlcsnap-2022-04-12-15h59m49s892-1.jpg');
+            background-size: cover;
             backdrop-filter: blur(8px);
-            pointer-events: none;
             z-index: -1;
         }
+
 
         .white-round-container {
             background-color: white;
@@ -128,7 +128,6 @@
         </div>
 
         <div class="mb-7"></div>
-        <div class="blind-layer"></div>
         <div class="grid grid-cols-3 gap-6 mt-2"> <!-- 그리드 컬럼과 간격 수정 -->
             <div class="relative">
                 <button
