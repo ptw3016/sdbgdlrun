@@ -19,7 +19,7 @@ const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 const REFRESH_TOKEN2 = process.env.REFRESH_TOKEN2;
 const SHEET_ID = process.env.SHEET_ID;
 const LogSt_NM = process.env.LogSt_NM;
-const SdTitle=process.env.SdTitle;
+const SdTitle = process.env.SdTitle;
 
 function sleep(ms) {
     return new Promise(resolve => {
@@ -197,7 +197,7 @@ async function sendemailPr(sendemjson) {
         },
     });
     const mailOptions = {
-        from: SdTitle+' <' + process.env.sdadminnvml + '>', // 발신자 정보
+        from: SdTitle + ' <' + process.env.sdadminnvml + '>', // 발신자 정보
         to: to, // 수신자 정보
         subject: subject, // 제목
         text: message, // 내용 (텍스트)
@@ -234,7 +234,7 @@ async function chkpasscd(timechk, pcchk) {
 
             }
         }
-        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv:chkrstlv };
+        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv: chkrstlv };
     } catch (error) {
         console.error(error.message);
         var sendemjson = {
@@ -250,14 +250,31 @@ async function chkpasscd(timechk, pcchk) {
 }
 
 async function getCurrentTime() {
-    const now = new Date();
+
+    // 1. 현재 시간(Locale)
+    const curr = new Date();
+    //console.log("현재시간(Locale) : " + curr + '<br>');
+
+    // 2. UTC 시간 계산
+    const utc =
+        curr.getTime() +
+        (curr.getTimezoneOffset() * 60 * 1000);
+
+    // 3. UTC to KST (UTC + 9시간)
+    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+    const now =
+        new Date(utc + (KR_TIME_DIFF));
+
+   // console.log("한국시간 : " + now);
+
+    // const now = new Date();
 
     // 연도(yy)를 가져옵니다.
     const year = now.getFullYear().toString().slice(-2);
-
+    
     // 월(MM)을 가져옵니다. 월은 0부터 시작하므로 1을 더하고, 2자리 숫자로 만듭니다.
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
-
+    
     // 일(dd)을 가져옵니다. 2자리 숫자로 만듭니다.
     const day = now.getDate().toString().padStart(2, '0');
 
@@ -282,6 +299,7 @@ async function getCurrentTime() {
 
     // 최종 문자열을 반환합니다.
     return `${year}-${month}-${day}(${dayOfWeek}) ${amPm} ${formattedHours}:${minutes}`;
+
 }
 
 async function sddrctlogappend(VALUES) {
@@ -327,6 +345,8 @@ async function sddrctlogappend(VALUES) {
     }
 
 }
+
+
 //smtbgdldvcPr("open");
 //chkpasscd();
 module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend };
