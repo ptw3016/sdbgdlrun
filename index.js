@@ -5,17 +5,50 @@ const app = express();
 const port = 3000;
 require("dotenv").config();
 
-
-const dynamicRoute = '/';
 const AMPNM = process.env.AMPNM;
 
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(bodyParser.json());
 
-app.get(dynamicRoute, (req, res) => {
-  const path = require('path');
-  const htmlFilePath = path.join(__dirname, 'sdbgdlprcs.html');
-  res.sendFile(htmlFilePath);
+app.get("/", async (req, res) => {
+  const chkrtrst = await sddrctpr.chkrtnm();
+  // console.log(chkrtrst);
+  const sheetName = process.env.JhSt_NM;
+
+  const udrange2 = `${sheetName}!BK3`;  //
+  await sddrctpr.sddrcupdate(udrange2, chkrtrst[0][0]);
+  const udrange3 = `${sheetName}!BK4`;  //
+  await sddrctpr.sddrcupdate(udrange3, chkrtrst[1][0]);
+  const value = new Date().getTime().toString() //고유아이디 만들기 예제
+  const udrange = `${sheetName}!BK2`;  //
+  await sddrctpr.sddrcupdate(udrange, value);
+
+  const rtnbdel = "/" + chkrtrst[1][0];
+  const rtnbcreate = "/" + value;
+  app._router.stack = app._router.stack.filter(layer => {
+    return layer.route ? layer.route.path !== rtnbdel : true;
+  });
+
+  app.get(rtnbcreate, async (req, res) => {
+    const rotmbrd = rtnbcreate.split("/");
+
+    const currentTimeMillis = new Date().getTime(); // 현재 시간을 millisecond로 얻기
+    const rotmbMillis = parseInt(rotmbrd[1], 10); // rotmb를 정수로 변환
+
+    const timeDifferenceMillis = currentTimeMillis - rotmbMillis; // 현재 시간과 rotmbMillis 사이의 차이를 밀리초로 얻기
+    const minutesDifference = Math.floor(timeDifferenceMillis / (1000 * 60)); // 차이를 분으로 변환
+
+    //console.log(`현재로부터 ${minutesDifference} 분이 지났습니다.`);
+    if (minutesDifference <= 1) {
+      const path = require('path');
+      const htmlFilePath = path.join(__dirname, 'sdbgdlprcs.html');
+      res.sendFile(htmlFilePath);
+    } else {
+      res.send("다시 QR코드를 스캔해주세요.")
+    }
+
+  });
+  res.redirect(rtnbcreate);
 });
 
 app.post('/submit', async (req, res) => {
@@ -45,12 +78,13 @@ app.post('/submit', async (req, res) => {
       logvalue[0][4] = pschkrst.chkrstlv;
     } else if (drctrst.result == "0002") {
       rstmsg = "도어락에 문제가 있습니다.";
-      admsg = `[관리자문의-${AMPNM}]`;
+      admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
       msgsw = "errorchk";
       drstate = drctrst.state;
       strst = "0002/열기에러"
     } else if (drctrst.result == "0000") {
       rstmsg = "도어락이 열렸습니다!!";
+      admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
       msgsw = "check";
       drstate = drctrst.state;
       strst = "열기성공"
@@ -59,7 +93,7 @@ app.post('/submit', async (req, res) => {
 
     } else {
       rstmsg = "도어락에 문제가 있습니다.";
-      admsg = `[관리자문의-${AMPNM}]`;
+      admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
       msgsw = "errorchk";
       drstate = drctrst.state;
       strst = "열기에러"
@@ -75,7 +109,8 @@ app.post('/submit', async (req, res) => {
 
   } else {
     const drchkstate = await sddrctpr.smtbgdlstatePr();
-    res.json({ message: `비밀번호가 틀렸습니다. `, admsg: `[관리자_문의-${AMPNM}]`, msgsw: "errorchk", drstate: drchkstate });
+    const admsgfail = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
+    res.json({ message: `비밀번호가 틀렸습니다. `, admsg: admsgfail, msgsw: "errorchk", drstate: drchkstate });
     const cltime = await sddrctpr.getCurrentTime();
     logvalue[0][0] = cltime;
     logvalue[0][1] = "비번틀림";
@@ -150,4 +185,3 @@ app.post('/sdddrclose', async (req, res) => {
 app.listen(port, () => {
   console.log(`sddlpr 서버 실행중...`);
 });
-

@@ -83,7 +83,7 @@ async function smtbgdldvcPr(drctval) {     //
             var fbrunrst = await sdbgfbonoffPr();
             //console.log("fbt on/off " + i + "번째 요청결과_ on : " + fbrunrst.on + ", off : " + fbrunrst.off);
             if (fbrunrst.on == "0000" && fbrunrst.off == "0000") {
-                await sleep(1200);  //딜레이 있을 수 있으니 1초 후 검사!
+                await sleep(1500);  //딜레이 있을 수 있으니 1초 후 검사!
                 const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 15, doorctval);
                 const attchk = result.attempt;
                 if (result.rst === doorctval) {
@@ -249,6 +249,36 @@ async function chkpasscd(timechk, pcchk) {
     }
 }
 
+async function chkrtnm() {
+    // //스프레드시트 ID, 시트 이름, 가져올 범위를 설정합니다.
+    try {
+        const sheetName = process.env.JhSt_NM;
+        const range = 'BK2:4';
+
+        const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+        authClient.setCredentials({ refresh_token: REFRESH_TOKEN2 });
+        const sheets = google.sheets({ version: 'v4', auth: authClient });
+        const response = await sheets.spreadsheets.values.get({  //sheet get!
+            spreadsheetId: SHEET_ID,
+            range: `${sheetName}!${range}`,
+        });
+        const values = response.data.values;
+
+        return values;
+    } catch (error) {
+        console.error(error.message);
+        var sendemjson = {
+            to: process.env.sdadminnvml,
+            subject: "sdbgdl get route 실행중 error",
+            message: "----errormsg----\n" +
+                error.message + "\n" +
+                "----errorstack----\n" +
+                error.stack + "\n"
+        }
+        sendemailPr(sendemjson);
+    }
+}
+
 async function getCurrentTime() {
 
     // 1. 현재 시간(Locale)
@@ -265,16 +295,16 @@ async function getCurrentTime() {
     const now =
         new Date(utc + (KR_TIME_DIFF));
 
-   // console.log("한국시간 : " + now);
+    // console.log("한국시간 : " + now);
 
     // const now = new Date();
 
     // 연도(yy)를 가져옵니다.
     const year = now.getFullYear().toString().slice(-2);
-    
+
     // 월(MM)을 가져옵니다. 월은 0부터 시작하므로 1을 더하고, 2자리 숫자로 만듭니다.
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    
+
     // 일(dd)을 가져옵니다. 2자리 숫자로 만듭니다.
     const day = now.getDate().toString().padStart(2, '0');
 
@@ -317,7 +347,7 @@ async function sddrctlogappend(VALUES) {
             valueInputOption: 'USER_ENTERED',
             resource: { values: VALUES },
         });
-        console.log(`시트에 행이 추가되었습니다.`);
+        //console.log(`시트에 행이 추가되었습니다.`);
 
         // const response = await sheets.spreadsheets.values.get({  //sheet get!
         //   spreadsheetId,
@@ -346,7 +376,73 @@ async function sddrctlogappend(VALUES) {
 
 }
 
+async function sddrcupdate(range, value) { //시트업데이트
+    //const sheetName = process.env.DCSTNM;
+    const RANGE = `${range}`;  //`${sheetName}!C4`; // ex) Sheet1!A1:B2  //한글도가능
+    const NEW_VALUES = [[value]];
+    const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+    authClient.setCredentials({ refresh_token: REFRESH_TOKEN2 });
+    const sheets = google.sheets({ version: 'v4', auth: authClient });
+    try {
 
+        const updateResponse = await sheets.spreadsheets.values.update({
+            spreadsheetId: SHEET_ID,
+            range: RANGE, // 수정하려는 특정 셀의 범위를 지정합니다.
+            valueInputOption: 'USER_ENTERED',
+            resource: { values: NEW_VALUES }, // 새로운 값을 설정합니다.
+        });
+
+        // console.log(`셀이 업데이트되었습니다.`);
+
+    } catch (e) {
+
+        console.error(e);
+        var emailsubject = "sddrctpr Log 시트에 업데이트중 에러발생!!";
+        var emailcontent = "sddrctpr Log 시트에 업데이트중 에러발생!!\n" +
+
+            "-----error msg-----\n" +
+            e.message + "\n" +
+            "-----error stack-----\n" +
+            e.stack;
+
+        var sendemjson = {
+            to: process.env.sdadminnvml,
+            subject: emailsubject,
+            message: emailcontent
+        }
+        //메일 전송
+        sendemailPr(sendemjson); // 이메일 전송
+    }
+}
+
+async function sddrcget(range) {
+    // //스프레드시트 ID, 시트 이름, 가져올 범위를 설정합니다.
+    try {
+        const RANGE = `${range}`;  //`${sheetName}!C4`; // ex) Sheet1!A1:B2  //한글도가능
+        const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+        authClient.setCredentials({ refresh_token: REFRESH_TOKEN2 });
+        const sheets = google.sheets({ version: 'v4', auth: authClient });
+        const response = await sheets.spreadsheets.values.get({  //sheet get!
+            spreadsheetId: SHEET_ID,
+            range: RANGE,
+        });
+        const values = response.data.values;
+
+        return values;
+    } catch (error) {
+        console.error(error.message);
+        var sendemjson = {
+            to: process.env.sdadminnvml,
+            subject: "sdbgdl get 실행중 error",
+            message: "----errormsg----\n" +
+                error.message + "\n" +
+                "----errorstack----\n" +
+                error.stack + "\n"
+        }
+        sendemailPr(sendemjson);
+    }
+}
 //smtbgdldvcPr("open");
 //chkpasscd();
-module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend };
+
+module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget };

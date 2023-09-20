@@ -93,7 +93,7 @@
         }
 
         .custom-text-size {
-            font-size: 15px;
+            font-size: 14px;
             /* 원하는 크기로 설정 */
         }
     </style>
@@ -315,20 +315,20 @@
                     const rststate = data.drstate;
                     let iconvalue = ""
                     if (rstmsgsw == "check") {
-                        iconvalue = "fa-solid fa-circle-check text-4xl text-blue-600";
+                        iconvalue = "fa-solid fa-circle-check text-5xl text-blue-600";
                     } else if (rstmsgsw == "precheck") {
-                        iconvalue = "fa-solid fa-circle-check text-4xl text-green-500";
+                        iconvalue = "fa-solid fa-circle-check text-5xl text-green-500";
                     } else if (rstmsgsw == "errorchk") {
-                        iconvalue = "fa-solid fa-circle-xmark text-4xl text-red-500";
+                        iconvalue = "fa-solid fa-circle-xmark text-5xl text-red-500";
                     } else {
-                        iconvalue = "fa-solid fa-circle-exclamation text-4xl text-red-500";
+                        iconvalue = "fa-solid fa-circle-exclamation text-5xl text-red-500";
                     }
 
                     const modalContent = `
-                <p class="text-2xl font-bold text-center"><i class="${iconvalue}"></i></p>
-                <div class="mb-4"></div>
-                    <p class="text-xl font-bold text-center">${data.message}<br>
-                    <span class="font-light custom-text-size text-center">${data.admsg}</span></p>`;
+                <p class="text-3xl font-bold text-center"><i class="${iconvalue}"></i></p>
+                <div class="mb-2"></div>
+                    <p class="text-2xl font-bold text-center mb-2">${data.message}</p>
+                    <p class="font-light custom-text-size text-center">${data.admsg}</p>`;
 
           
                     openModal(modalContent);
