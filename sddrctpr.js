@@ -33,7 +33,7 @@ async function smtbgdlstatePr() {
         let rstcode = {};
         const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
-        console.log("smt 현재상태확인:" + rtgetresult);
+        console.log("로드됨 - smt 현재상태확인:" + rtgetresult);
 
         return rtgetresult;
     } catch (e) {
@@ -442,7 +442,18 @@ async function sddrcget(range) {
         sendemailPr(sendemjson);
     }
 }
+
+async function timestampchk(iptime) {
+
+    const currentTimeMillis = new Date().getTime(); // 현재 시간을 millisecond로 얻기
+    const rotmbMillis = parseInt(iptime, 10); // rotmb를 정수로 변환
+
+    const timeDifferenceMillis = currentTimeMillis - rotmbMillis; // 현재 시간과 rotmbMillis 사이의 차이를 밀리초로 얻기
+    const minDiffval = Math.floor(timeDifferenceMillis / (1000 * 60)); // 차이를 분으로 변환
+    return minDiffval;
+
+}
 //smtbgdldvcPr("open");
 //chkpasscd();
 
-module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget };
+module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget, timestampchk };

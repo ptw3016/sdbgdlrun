@@ -205,6 +205,7 @@
                 <span class="ml-2 font-bold" style="display: flex; align-items: center; height: 100%;">도어락상태&nbsp</span>
                 <div id="circl2"><i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></div>
             </button>
+            <input type="hidden" id="hiddenField" name="hiddenField" value="{{hiddenFieldData}}">
         </div>
     </div>
     </div>
@@ -290,11 +291,12 @@
 
 
         function checkCode() {
+
             if (enteredCode.length < 6) {
                 alert("6자리 모두 입력해주세요!");
                 return;
             }
-
+            const sgid = document.getElementById("hiddenField").value;
             loadingScreen.style.display = 'flex';
 
             fetch('/submit', {
@@ -302,18 +304,24 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ enteredCode }), // 입력한 코드를 JSON으로 전송합니다.
+                body: JSON.stringify({ enteredCode, sgid }), // 입력한 코드를 JSON으로 전송합니다.
             })
                 .then((response) => response.json())
                 .then((data) => {
                     // 서버로부터 받은 응답을 처리
-                    loadingScreen.style.display = 'none';
                     //alert("서버 응답: " + JSON.stringify(data));
+
+                    loadingScreen.style.display = 'none';
                     const rststring = JSON.stringify(data);
                     const rststr = rststring.message;
                     const rstmsgsw = data.msgsw;
                     const rststate = data.drstate;
                     let iconvalue = ""
+                    if (rstmsgsw == "qrerror") {
+                        window.location.pathname = '/qrerror.html';
+                        return;
+                    }
+
                     if (rstmsgsw == "check") {
                         iconvalue = "fa-solid fa-circle-check text-5xl text-blue-600";
                     } else if (rstmsgsw == "precheck") {
@@ -330,7 +338,7 @@
                     <p class="text-2xl font-bold text-center mb-2">${data.message}</p>
                     <p class="font-light custom-text-size text-center">${data.admsg}</p>`;
 
-          
+
                     openModal(modalContent);
                     const circl2 = document.getElementById('circl2');
                     if (rststate == "open") {
@@ -438,7 +446,7 @@
                 clearTimeout(pressTimer);
             });
         });
-    
+
 
 
     </script>

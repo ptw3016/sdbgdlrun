@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const sddrctpr = require("./sddrctpr");
 const app = express();
 const port = 3000;
@@ -16,55 +17,76 @@ app.get("/", async (req, res) => {
   const sheetName = process.env.JhSt_NM;
 
   const udrange2 = `${sheetName}!BK3`;  //
-  await sddrctpr.sddrcupdate(udrange2, chkrtrst[0][0]);
+  sddrctpr.sddrcupdate(udrange2, chkrtrst[0][0]);
   const udrange3 = `${sheetName}!BK4`;  //
-  await sddrctpr.sddrcupdate(udrange3, chkrtrst[1][0]);
+  sddrctpr.sddrcupdate(udrange3, chkrtrst[1][0]);
   const value = new Date().getTime().toString() //고유아이디 만들기 예제
   const udrange = `${sheetName}!BK2`;  //
   await sddrctpr.sddrcupdate(udrange, value);
 
   const rtnbdel = "/" + chkrtrst[1][0];
-  const rtnbcreate = "/" + value;
+  const rtnbcreate = "/:id";
+  const rtnbredirect = "/" + value;
   app._router.stack = app._router.stack.filter(layer => {
     return layer.route ? layer.route.path !== rtnbdel : true;
   });
 
   app.get(rtnbcreate, async (req, res) => {
-    const rotmbrd = rtnbcreate.split("/");
-
-    const currentTimeMillis = new Date().getTime(); // 현재 시간을 millisecond로 얻기
-    const rotmbMillis = parseInt(rotmbrd[1], 10); // rotmb를 정수로 변환
-
-    const timeDifferenceMillis = currentTimeMillis - rotmbMillis; // 현재 시간과 rotmbMillis 사이의 차이를 밀리초로 얻기
-    const minutesDifference = Math.floor(timeDifferenceMillis / (1000 * 60)); // 차이를 분으로 변환
+    const rotmbrd = rtnbredirect.split("/");
+    const minutesDifference = await sddrctpr.timestampchk(rotmbrd[1]);
+    const reqval = req.params
+    const prrqval = reqval.id
 
     //console.log(`현재로부터 ${minutesDifference} 분이 지났습니다.`);
     if (minutesDifference <= 1) {
-      const path = require('path');
-      const htmlFilePath = path.join(__dirname, 'sdbgdlprcs.html');
-      res.sendFile(htmlFilePath);
+      // const path = require('path');
+      // const htmlFilePath = path.join(__dirname, 'sdbgdlprcs.html');
+      // res.sendFile(htmlFilePath);
+
+      fs.readFile(__dirname + '/sdbgdlprcs.html', 'utf8', (err, data) => {
+        if (err) {
+          console.error('파일을 읽을 수 없습니다.');
+          return res.status(500).send('서버 오류');
+        }
+        const dataForHiddenField = prrqval; // 
+        data = data.replace('{{hiddenFieldData}}', dataForHiddenField);
+        res.send(data);
+      });
     } else {
       res.send("다시 QR코드를 스캔해주세요.")
     }
-
   });
-  res.redirect(rtnbcreate);
+  res.redirect(rtnbredirect);
 });
 
 app.post('/submit', async (req, res) => {
   const { body } = req;
   const pcchkinput = body.enteredCode;
+  const pcstampchk = body.sgid;
+  //console.log(pcstampchk);
+  var rstmsg = "";
+  var admsg = "";
+  var msgsw = "";
+  var drstate = "";
+  var strst = "";
+
+  const minutesDifference = await sddrctpr.timestampchk(pcstampchk);
   const pschkrst = await sddrctpr.chkpasscd("시간", pcchkinput); //큐알로 방금 접속했는지도 확인해보기.. 위치는 어떻게..
   var logvalue = [
     [
     ]
   ];
-  if (pschkrst.chkrst == true) {
-    var rstmsg = "";
-    var admsg = "";
-    var msgsw = "";
-    var drstate = "";
-    var strst = "";
+
+  if (minutesDifference > 1) {
+    //console.log("다시 QR코드를 스캔해주세요");
+    rstmsg = "QR코드 만료";
+    admsg = "다시 QR코드를 스캔해주세요";
+    msgsw = "qrerror";
+    drstate = "";
+    strst = "QR코드 만료"
+    res.json({ message: rstmsg, admsg: admsg, msgsw: msgsw, drstate: "" });
+  }else if (pschkrst.chkrst == true) {
+   
     logvalue[0][3] = "-";
     logvalue[0][4] = "-";
 
