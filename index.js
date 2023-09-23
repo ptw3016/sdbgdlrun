@@ -7,6 +7,7 @@ const port = 3000;
 require("dotenv").config();
 
 const AMPNM = process.env.AMPNM;
+const rtnbcreate = "/:id";
 
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(bodyParser.json());
@@ -24,39 +25,54 @@ app.get("/", async (req, res) => {
   const udrange = `${sheetName}!BK2`;  //
   await sddrctpr.sddrcupdate(udrange, value);
 
-  const rtnbdel = "/" + chkrtrst[1][0];
-  const rtnbcreate = "/:id";
-  const rtnbredirect = "/" + value;
+  const rtnbdel = "/drchkin/" + chkrtrst[1][0];
+
+  const rtnbredirect = "/drchkin/" + value;
   app._router.stack = app._router.stack.filter(layer => {
     return layer.route ? layer.route.path !== rtnbdel : true;
   });
-
-  app.get(rtnbcreate, async (req, res) => {
-    const rotmbrd = rtnbredirect.split("/");
-    const minutesDifference = await sddrctpr.timestampchk(rotmbrd[1]);
-    const reqval = req.params
-    const prrqval = reqval.id
-
-    //console.log(`현재로부터 ${minutesDifference} 분이 지났습니다.`);
-    if (minutesDifference <= 1) {
-      // const path = require('path');
-      // const htmlFilePath = path.join(__dirname, 'sdbgdlprcs.html');
-      // res.sendFile(htmlFilePath);
-
-      fs.readFile(__dirname + '/sdbgdlprcs.html', 'utf8', (err, data) => {
-        if (err) {
-          console.error('파일을 읽을 수 없습니다.');
-          return res.status(500).send('서버 오류');
-        }
-        const dataForHiddenField = prrqval; // 
-        data = data.replace('{{hiddenFieldData}}', dataForHiddenField);
-        res.send(data);
-      });
-    } else {
-      res.send("다시 QR코드를 스캔해주세요.")
-    }
-  });
   res.redirect(rtnbredirect);
+});
+
+app.get("/drchkin/:id", async (req, res) => {
+  const chkrtrst = await sddrctpr.chkrtnm();
+  const stid1 = chkrtrst[0][0];
+  const stid2 = chkrtrst[1][0];
+  // console.log("1stid : " + chkrtrst[0][0]);
+  // console.log("2ndid : " + chkrtrst[1][0]);
+  const reqval = req.params
+  const prrqval = reqval.id
+  if (stid1 == prrqval || stid2 == prrqval) {
+  } else {
+    const path = require('path');
+    const htmlFilePath = path.join(__dirname, 'qrerror.html');
+    res.sendFile(htmlFilePath);
+    return;
+  }
+
+  const minutesDifference = await sddrctpr.timestampchk(prrqval);
+  // console.log(`현재로부터 ${minutesDifference} 분이 지났습니다.`);
+  if (minutesDifference <= 1) {
+    fs.readFile(__dirname + '/sdbgdlprcs.html', 'utf8', (err, data) => {
+      if (err) {
+        console.error('파일을 읽을 수 없습니다.');
+        return res.status(500).send('서버 오류');
+      }
+      const dataForHiddenField = prrqval; // 
+      data = data.replace('{{hiddenFieldData}}', dataForHiddenField);
+      res.send(data);
+    });
+  } else {
+    const path = require('path');
+    const htmlFilePath = path.join(__dirname, 'qrerror.html');
+    res.sendFile(htmlFilePath);
+  }
+});
+
+app.get("/drchkin/qrerror", async (req, res) => {
+  const path = require('path');
+  const htmlFilePath = path.join(__dirname, 'qrerror.html');
+  res.sendFile(htmlFilePath);
 });
 
 app.post('/submit', async (req, res) => {
@@ -85,8 +101,8 @@ app.post('/submit', async (req, res) => {
     drstate = "";
     strst = "QR코드 만료"
     res.json({ message: rstmsg, admsg: admsg, msgsw: msgsw, drstate: "" });
-  }else if (pschkrst.chkrst == true) {
-   
+  } else if (pschkrst.chkrst == true) {
+
     logvalue[0][3] = "-";
     logvalue[0][4] = "-";
 
