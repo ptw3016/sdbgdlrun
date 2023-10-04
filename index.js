@@ -87,7 +87,7 @@ app.post('/submit', async (req, res) => {
   var strst = "";
 
   const minutesDifference = await sddrctpr.timestampchk(pcstampchk);
-  const pschkrst = await sddrctpr.chkpasscd("시간", pcchkinput); //큐알로 방금 접속했는지도 확인해보기.. 위치는 어떻게..
+  const pschkrst = await sddrctpr.chkpasscd(pcchkinput); //큐알로 방금 접속했는지도 확인해보기.. 위치는 어떻게..
   var logvalue = [
     [
     ]

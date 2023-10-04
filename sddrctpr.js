@@ -208,7 +208,7 @@ async function sendemailPr(sendemjson) {
 }
 
 
-async function chkpasscd(timechk, pcchk) {
+async function chkpasscd(pcchk) {
     // //스프레드시트 ID, 시트 이름, 가져올 범위를 설정합니다.
     try {
         const sheetName = process.env.DCSTNM;
@@ -221,6 +221,13 @@ async function chkpasscd(timechk, pcchk) {
             spreadsheetId: SHEET_ID,
             range: `${sheetName}!${range}`,
         });
+
+        // var startTimeStr = '20230927(수) 오후 17:09:56';
+        // var endTimeStr = '20231004(수) 오후 17:09:56';
+        // // 기간체크 예제
+        // checkTimePeriod(startTimeStr,endTimeStr);
+
+
         const values = response.data.values;
         let chkrst = false;
         let chkrstnm = "";
@@ -281,55 +288,24 @@ async function chkrtnm() {
 
 async function getCurrentTime() {
 
-    // 1. 현재 시간(Locale)
-    const curr = new Date();
-    //console.log("현재시간(Locale) : " + curr + '<br>');
+    var date = new Date();
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    var dayOfWeek = weekdays[date.getDay()];;
+    var sddrrgdate = getCurrentTimeFormatted(date, dayOfWeek);
+    console.log(sddrrgdate);
+    return sddrrgdate;
+}
 
-    // 2. UTC 시간 계산
-    const utc =
-        curr.getTime() +
-        (curr.getTimezoneOffset() * 60 * 1000);
+function getCurrentTimeFormatted(date, dayOfWeek) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const meridiem = date.getHours() < 12 ? '오전' : '오후';
 
-    // 3. UTC to KST (UTC + 9시간)
-    const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
-    const now =
-        new Date(utc + (KR_TIME_DIFF));
-
-    // console.log("한국시간 : " + now);
-
-    // const now = new Date();
-
-    // 연도(yy)를 가져옵니다.
-    const year = now.getFullYear().toString().slice(-2);
-
-    // 월(MM)을 가져옵니다. 월은 0부터 시작하므로 1을 더하고, 2자리 숫자로 만듭니다.
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-
-    // 일(dd)을 가져옵니다. 2자리 숫자로 만듭니다.
-    const day = now.getDate().toString().padStart(2, '0');
-
-    // 요일(ddd)을 가져옵니다.
-    const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
-    const dayOfWeek = daysOfWeek[now.getDay()];
-
-    // 시간(hh)을 가져옵니다.
-    let hours = now.getHours();
-    const isPM = hours >= 12;
-    if (isPM) {
-        hours -= 12;
-    }
-    hours = hours === 0 ? 12 : hours; // 0시를 12시로 표시합니다.
-    const formattedHours = hours.toString().padStart(2, '0');
-
-    // 분(mm)을 가져옵니다.
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-
-    // 오전/오후(am/pm)를 가져옵니다.
-    const amPm = isPM ? '오후' : '오전';
-
-    // 최종 문자열을 반환합니다.
-    return `${year}-${month}-${day}(${dayOfWeek}) ${amPm} ${formattedHours}:${minutes}`;
-
+    return `${year}${month}${day}(${dayOfWeek}) ${meridiem} ${hours}:${minutes}:${seconds}`;
 }
 
 async function sddrctlogappend(VALUES) {
@@ -416,7 +392,6 @@ async function sddrcupdate(range, value) { //시트업데이트
 }
 
 async function sddrcget(range) {
-    // //스프레드시트 ID, 시트 이름, 가져올 범위를 설정합니다.
     try {
         const RANGE = `${range}`;  //`${sheetName}!C4`; // ex) Sheet1!A1:B2  //한글도가능
         const authClient = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
@@ -453,7 +428,46 @@ async function timestampchk(iptime) {
     return minDiffval;
 
 }
+
+async function parseDateString(dateStr) {
+    // 문자열에서 연도, 월, 일, 시간, 분, 초 추출
+    const matches = dateStr.match(/(\d{4})(\d{2})(\d{2})\(.+\)\s+(오전|오후)\s+(\d{2}):(\d{2}):(\d{2})/);
+
+    if (!matches) {
+        throw new Error('올바른 날짜 형식이 아닙니다.');
+    }
+
+    const year = parseInt(matches[1], 10);
+    const month = parseInt(matches[2], 10) - 1; // 월은 0부터 시작하므로 1을 뺍니다.
+    const day = parseInt(matches[3], 10);
+    const meridiem = matches[4];
+    let hour = parseInt(matches[5], 10);
+    const minute = parseInt(matches[6], 10);
+    const second = parseInt(matches[7], 10);
+
+    // 오후 시간을 24시간 형식으로 변환
+    if (meridiem === '오후' && hour < 12) {
+        hour += 12;
+    }
+
+    return new Date(year, month, day, hour, minute, second);
+}
+
+async function checkTimePeriod(startTimeStr, endTimeStr) {
+    // 시작 시간과 종료 시간을 Date 객체로 변환
+    const startTime = parseDateString(startTimeStr);
+    const endTime = parseDateString(endTimeStr);
+
+    const currentTime = new Date();
+
+    if (currentTime >= startTime && currentTime <= endTime) {
+        console.log('현재 시간은 기간 내에 있습니다.');
+    } else {
+        console.log('현재 시간은 기간을 벗어났습니다.');
+    }
+}
 //smtbgdldvcPr("open");
 //chkpasscd();
+//getCurrentTime();
 
 module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget, timestampchk };
