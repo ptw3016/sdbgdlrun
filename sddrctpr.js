@@ -30,7 +30,6 @@ function sleep(ms) {
 async function smtbgdlstatePr() {
 
     try {
-        let rstcode = {};
         const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
         console.log("로드됨 - smt 현재상태확인:" + rtgetresult);
@@ -63,32 +62,21 @@ async function smtbgdldvcPr(drctval) {     //
         }
         var devicesget = await client.devices.get(sdbgdrsr_dvId)
         const doorctval = drctval;
+    
 
-        const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
-        const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
-        const getrttime = await getCurrentTime();
-        console.log("현재(" + getrttime + ")상태확인:" + rtgetresult);
         console.log(drctval + "! 요청실행중...");
-
-        //return;
-        if (rtgetresult == doorctval) {
-            console.log("현재상태가 '" + doorctval + "' 이므로 실행없이 종료!");
-            rstcode = { result: "0001", state: doorctval, tryct: "" };
-            return rstcode;
-        }
-        //return { result: "0000" };
-
         var totalct = 1  //fbt 최대 실행 횟수
+        var statect = 15 //state 확인
         for (let i = 1; i <= totalct; i++) {
             var fbrunrst = await sdbgfbonoffPr();
             //console.log("fbt on/off " + i + "번째 요청결과_ on : " + fbrunrst.on + ", off : " + fbrunrst.off);
             if (fbrunrst.on == "0000" && fbrunrst.off == "0000") {
                 await sleep(1500);  //딜레이 있을 수 있으니 1초 후 검사!
-                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, 15, doorctval);
+                const result = await retryUntilValue_dltb(sdbgdrsr_dvId, statect, doorctval);
                 const attchk = result.attempt;
                 if (result.rst === doorctval) {
                     console.log(`-장치 요청결과 : ${attchk}만에 '${result.rst}' 확인.`);
-                    rstcode = { result: "0000", state: doorctval, tryct: i };
+                    rstcode = { result: "0000", state: doorctval, tryct: attchk+"/"+statect };
                     return rstcode;
                 } else {
                     console.log(`-장치 요청결과 : ${attchk}회 시도 후 확인실패!.`);
@@ -98,7 +86,7 @@ async function smtbgdldvcPr(drctval) {     //
             }
             if (i === totalct) {
                 console.log(`문 ${doorctval}을 못했습니다. 최대 시도 횟수(${totalct})`);
-                rstcode = { result: "0002", state: doorctval, tryct: "" };
+                rstcode = { result: "0002", state: doorctval, tryct: attchk+"/"+statect };
                 return rstcode;
             }
         }
@@ -229,19 +217,25 @@ async function chkpasscd(pcchk) {
 
 
         const values = response.data.values;
-        let chkrst = false;
+        let chkrst = "";
         let chkrstnm = "";
         let chkrstlv = "";
         for (var i = 0; i < values.length; i++) {
             if (values[i][2] == pcchk) {
-                chkrst = true;
-                chkrstnm = values[i][1];
-                chkrstlv = values[i][6];
+                if(values[i][0]=="유효"){
+                    chkrst = "chkok";
+                    chkrstnm = values[i][1];
+                    chkrstlv = values[i][6];
+                   
+                    break;
+                }else{
+                    chkrst = "chkpifaild";
+                    break;
+                }
                 //console.log("일치항목 체크확인!:"+values[0][2]);
-
             }
         }
-        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv: chkrstlv };
+        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv: chkrstlv};
     } catch (error) {
         console.error(error.message);
         var sendemjson = {

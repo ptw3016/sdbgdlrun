@@ -12,6 +12,30 @@ const rtnbcreate = "/:id";
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(bodyParser.json());
 
+
+app.get("/admin/131313", async (req, res) => {
+  const chkrtrst = await sddrctpr.chkrtnm();
+  // console.log(chkrtrst);
+  const sheetName = process.env.JhSt_NM;
+
+  const udrange2 = `${sheetName}!BK3`;  //
+  sddrctpr.sddrcupdate(udrange2, chkrtrst[0][0]);
+  const udrange3 = `${sheetName}!BK4`;  //
+  sddrctpr.sddrcupdate(udrange3, chkrtrst[1][0]);
+  const value = new Date().getTime().toString() //고유아이디 만들기 예제
+  const udrange = `${sheetName}!BK2`;  //
+  await sddrctpr.sddrcupdate(udrange, value);
+
+  const rtnbdel = "/drchkinad/" + chkrtrst[1][0];
+
+  const rtnbredirect = "/drchkinad/" + value;
+  app._router.stack = app._router.stack.filter(layer => {
+    return layer.route ? layer.route.path !== rtnbdel : true;
+  });
+  res.redirect(rtnbredirect);
+});
+
+
 app.get("/", async (req, res) => {
   const chkrtrst = await sddrctpr.chkrtnm();
   // console.log(chkrtrst);
@@ -32,6 +56,41 @@ app.get("/", async (req, res) => {
     return layer.route ? layer.route.path !== rtnbdel : true;
   });
   res.redirect(rtnbredirect);
+});
+
+app.get("/drchkinad/:id", async (req, res) => {
+  const chkrtrst = await sddrctpr.chkrtnm();
+  const stid1 = chkrtrst[0][0];
+  const stid2 = chkrtrst[1][0];
+  // console.log("1stid : " + chkrtrst[0][0]);
+  // console.log("2ndid : " + chkrtrst[1][0]);
+  const reqval = req.params
+  const prrqval = reqval.id
+  if (stid1 == prrqval || stid2 == prrqval) {
+  } else {
+    const path = require('path');
+    const htmlFilePath = path.join(__dirname, 'qrerror.html');
+    res.sendFile(htmlFilePath);
+    return;
+  }
+
+  const minutesDifference = await sddrctpr.timestampchk(prrqval);
+  // console.log(`현재로부터 ${minutesDifference} 분이 지났습니다.`);
+  if (minutesDifference <= 1) {
+    fs.readFile(__dirname + '/sdbgdlprcsad.html', 'utf8', (err, data) => {
+      if (err) {
+        console.error('파일을 읽을 수 없습니다.');
+        return res.status(500).send('서버 오류');
+      }
+      const dataForHiddenField = prrqval; // 
+      data = data.replace('{{hiddenFieldData}}', dataForHiddenField);
+      res.send(data);
+    });
+  } else {
+    const path = require('path');
+    const htmlFilePath = path.join(__dirname, 'qrerror.html');
+    res.sendFile(htmlFilePath);
+  }
 });
 
 app.get("/drchkin/:id", async (req, res) => {
@@ -101,19 +160,40 @@ app.post('/submit', async (req, res) => {
     drstate = "";
     strst = "QR코드 만료"
     res.json({ message: rstmsg, admsg: admsg, msgsw: msgsw, drstate: "" });
-  } else if (pschkrst.chkrst == true) {
+  } else if(pschkrst.chkrst == "chkpifaild"){
+    const drchkstate = await sddrctpr.smtbgdlstatePr();
+    const admsgplfail = `비밀번호가 만료되었습니다,<br> 재발급시 관리자에게 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
+    res.json({ message: `비밀번호가 만료되었습니다. `, admsg: admsgplfail, msgsw: "errorchk", drstate: drchkstate });
+    const clpltime = await sddrctpr.getCurrentTime();
+    logvalue[0][0] = clpltime;
+    logvalue[0][1] = "비번만료";
+    logvalue[0][2] = pcchkinput;
+    logvalue[0][3] = pschkrst.chkrstnm;
+    logvalue[0][4] = pschkrst.chkrstlv;
 
-    logvalue[0][3] = "-";
-    logvalue[0][4] = "-";
+    var sendemjson = {
+      to: process.env.sdadminnvml,
+      subject: "sdbgdl 실행시도됨!",
+      message: "sdbgdl 실행시도내역----\n" +
+        "시간 : " + clpltime + "\n" +
+        "시도결과 : 비밀번호 만료(입력 : " + pcchkinput + ")\n"
+    }
+    sddrctpr.sendemailPr(sendemjson);
+    sddrctpr.sddrctlogappend(logvalue);
+    //로그 준비
 
+  }else if (pschkrst.chkrst == "chkok") {
+
+    logvalue[0][3] = pschkrst.chkrstnm;
+    logvalue[0][4] = pschkrst.chkrstlv;
+    
     const drctrst = await sddrctpr.smtbgdldvcPr("open");
     if (drctrst.result == "0001") {
       rstmsg = "이미 도어락이 열려있습니다."
       msgsw = "precheck";
       drstate = drctrst.state;
       strst = "이미열림"
-      logvalue[0][3] = pschkrst.chkrstnm;
-      logvalue[0][4] = pschkrst.chkrstlv;
+      
     } else if (drctrst.result == "0002") {
       rstmsg = "도어락에 문제가 있습니다.";
       admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
@@ -126,8 +206,6 @@ app.post('/submit', async (req, res) => {
       msgsw = "check";
       drstate = drctrst.state;
       strst = "열기성공"
-      logvalue[0][3] = pschkrst.chkrstnm;
-      logvalue[0][4] = pschkrst.chkrstlv;
 
     } else {
       rstmsg = "도어락에 문제가 있습니다.";
