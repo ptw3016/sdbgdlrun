@@ -306,7 +306,7 @@
                 },
                 body: JSON.stringify({ enteredCode, sgid }), // 입력한 코드를 JSON으로 전송합니다.
             })
-                .then((response) => response.js.son())
+                .then((response) => response.json())
                 .then((data) => {
                     // 서버로부터 받은 응답을 처리
                     //alert("서버 응답: " + JSONtringify(data));
@@ -383,7 +383,7 @@
             modal.classList.add('hidden');
         }
 
-        var button = document.getElementById("circl");
+        var button = document.getElementById("circl"); //circl
         function drlcclsePr() {
             var rstclose = confirm("도어락 close 실행하시겠습니까?");
             if (rstclose) {

@@ -193,7 +193,7 @@
             </div>
             <div class="relative">
                 <button
-                    id="cnclbtn" class="w-16 h-16 rounded-full border-none border-gray-300 focus:outline-none bg-red-500 hover:bg-red-600 text-white font-semibold"
+                    class="w-16 h-16 rounded-full border-none border-gray-300 focus:outline-none bg-red-500 hover:bg-red-600 text-white font-semibold"
                     onclick="backclearCircle()">삭제</button>
             </div>
         </div>
@@ -383,7 +383,7 @@
             modal.classList.add('hidden');
         }
 
-        var cnclbtn = document.getElementById("cnclbtn");
+        var button = document.getElementById("circl"); //circl
         function drlcclsePr() {
             var rstclose = confirm("도어락 close 실행하시겠습니까?");
             if (rstclose) {
@@ -414,22 +414,22 @@
             }
         }
 
-        cnclbtn.addEventListener("mousedown", function () {
+        button.addEventListener("mousedown", function () {
             var pressTimer = setTimeout(function () {
                 drlcclsePr();
             }, 5000); //
 
-            cnclbtn.addEventListener("mouseup", function () {
+            button.addEventListener("mouseup", function () {
                 clearTimeout(pressTimer);
             });
 
-            cnclbtn.addEventListener("mouseleave", function () {
+            button.addEventListener("mouseleave", function () {
                 clearTimeout(pressTimer);
             });
         });
 
         // 버튼을 터치했을 때 실행되는 함수
-        cnclbtn.addEventListener("touchstart", function (event) {
+        button.addEventListener("touchstart", function (event) {
             event.preventDefault(); // 기본 터치 동작을 중지하여 텍스트 선택을 방지합니다.
 
             // 1초(1000 밀리초) 후에 길게 터치했는지 확인
@@ -437,11 +437,11 @@
                 drlcclsePr();
             }, 5000); // 
 
-            cnclbtn.addEventListener("touchend", function () {
+            button.addEventListener("touchend", function () {
                 clearTimeout(pressTimer);
             });
 
-            cnclbtn.addEventListener("touchcancel", function () {
+            button.addEventListener("touchcancel", function () {
                 // 영역을 벗어났으므로 타이머를 클리어합니다.
                 clearTimeout(pressTimer);
             });
