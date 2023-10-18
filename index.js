@@ -342,7 +342,11 @@ app.post('/sdddrclose', async (req, res) => {
 
 });
 
-
+app.get("/test", async (req, res) => {
+  const path = require('path');
+  const htmlFilePath = path.join(__dirname, 'priceready.html');
+  res.sendFile(htmlFilePath);
+});
 
 app.listen(port, () => {
   console.log(`sddlpr 서버 실행중...`);
