@@ -62,7 +62,6 @@ async function smtbgdldvcPr(drctval) {     //
         }
         var devicesget = await client.devices.get(sdbgdrsr_dvId)
         const doorctval = drctval;
-    
 
         console.log(drctval + "! 요청실행중...");
         var totalct = 1  //fbt 최대 실행 횟수
@@ -80,9 +79,11 @@ async function smtbgdldvcPr(drctval) {     //
                     return rstcode;
                 } else {
                     console.log(`-장치 요청결과 : ${attchk}회 시도 후 확인실패!.`);
+                    rstcode = { result: "0002", state: doorctval, tryct: attchk+"/"+statect };
+                    return rstcode;
                 }
             } else {
-                console.log(i + "번째 요청실패! 다시시도!");
+                //console.log(i + "번째 요청실패! 다시시도!");
             }
             if (i === totalct) {
                 console.log(`문 ${doorctval}을 못했습니다. 최대 시도 횟수(${totalct})`);
@@ -226,7 +227,7 @@ async function chkpasscd(pcchk) {
                     chkrst = "chkok";
                     chkrstnm = values[i][1];
                     chkrstlv = values[i][6];
-                   
+                    
                     break;
                 }else{
                     chkrst = "chkpifaild";
