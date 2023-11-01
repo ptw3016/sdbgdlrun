@@ -32,18 +32,18 @@ async function smtbgdlstatePr() {
     try {
         const rtgetstatus = await client.devices.getStatus(sdbgdrsr_dvId);  //현재상태 확인 위해 한번검사!
         const rtgetresult = rtgetstatus.components.main.contactSensor.contact.value;
-        console.log("로드됨 - smt 현재상태확인:" + rtgetresult);
+        //console.log("로드됨 - smt 현재상태확인:" + rtgetresult);
 
         return rtgetresult;
     } catch (e) {
-        console.error(error.message);
+        console.error(e.message);
         var sendemjson = {
             to: process.env.sdadminnvml,
             subject: "sdbgdlstate 실행중 error",
             message: "----errormsg----\n" +
-                error.message + "\n" +
+                e.message + "\n" +
                 "----errorstack----\n" +
-                error.stack + "\n"
+                e.stack + "\n"
         }
         sendemailPr(sendemjson);
     }
@@ -75,11 +75,11 @@ async function smtbgdldvcPr(drctval) {     //
                 const attchk = result.attempt;
                 if (result.rst === doorctval) {
                     console.log(`-장치 요청결과 : ${attchk}만에 '${result.rst}' 확인.`);
-                    rstcode = { result: "0000", state: doorctval, tryct: attchk+"/"+statect };
+                    rstcode = { result: "0000", state: result.rst, tryct: attchk + "/" + statect };
                     return rstcode;
                 } else {
                     console.log(`-장치 요청결과 : ${attchk}회 시도 후 확인실패!.`);
-                    rstcode = { result: "0002", state: doorctval, tryct: attchk+"/"+statect };
+                    rstcode = { result: "0002", state: result.rst, tryct: attchk + "/" + statect };
                     return rstcode;
                 }
             } else {
@@ -87,7 +87,7 @@ async function smtbgdldvcPr(drctval) {     //
             }
             if (i === totalct) {
                 console.log(`문 ${doorctval}을 못했습니다. 최대 시도 횟수(${totalct})`);
-                rstcode = { result: "0002", state: doorctval, tryct: attchk+"/"+statect };
+                rstcode = { result: "0002", state: doorctval, tryct: attchk + "/" + statect };
                 return rstcode;
             }
         }
@@ -223,20 +223,20 @@ async function chkpasscd(pcchk) {
         let chkrstlv = "";
         for (var i = 0; i < values.length; i++) {
             if (values[i][2] == pcchk) {
-                if(values[i][0]=="유효"){
+                if (values[i][0] == "유효") {
                     chkrst = "chkok";
                     chkrstnm = values[i][1];
                     chkrstlv = values[i][6];
-                    
+
                     break;
-                }else{
+                } else {
                     chkrst = "chkpifaild";
                     break;
                 }
                 //console.log("일치항목 체크확인!:"+values[0][2]);
             }
         }
-        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv: chkrstlv};
+        return { chkrst: chkrst, chkrstnm: chkrstnm, chkrstlv: chkrstlv };
     } catch (error) {
         console.error(error.message);
         var sendemjson = {
@@ -287,7 +287,7 @@ async function getCurrentTime() {
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
     var dayOfWeek = weekdays[date.getDay()];;
     var sddrrgdate = getCurrentTimeFormatted(date, dayOfWeek);
-    console.log(sddrrgdate);
+    // console.log(sddrrgdate);
     return sddrrgdate;
 }
 

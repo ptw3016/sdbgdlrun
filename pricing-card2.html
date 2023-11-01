@@ -1,0 +1,224 @@
+<div class="pricing-card pricing-card2">
+    <h2 class="pricing-subtitle2">드럼레슨_정규반 [월정기]</h2>
+    <p class="pricing-subtitle">레슨보다 연습이 우선인 <br>분들에게 적합합니다.</p>
+
+    <div class="price">
+        <span class="pricesymbol">￦&nbsp</span><span class="jgctprice">200,000</span>&nbsp<span
+            class="month">/1달(4회)</span><span class="periset">[50분]</span>
+    </div>
+
+    <div>
+        <span class="pricing-subtitle pricedesc2">[1:1개인] , [50분] , 1달 , 연습실(매일2시간)
+        </span>
+    </div>
+
+    <div class="salediv">
+        <div class="salediv_2">
+            * 월정기 혜택
+        </div>
+
+        <div class="salediv_3">
+            <div>
+                <span class="pricing-subtitle saleprice">- 수업횟수 상관없이 등록달 연습실 이용가능</span><span
+                    class="saledivprice"></span>
+            </div>
+            <div>
+                <span class="pricing-subtitle saleprice">- 단회 수업가격보다 할인된 가격</span><span
+                    class="saledivprice"></span>
+            </div>
+            <div>
+                <span class="pricing-subtitle saleprice">- 한달 5주차인경우 추가금 없음</span><span
+                    class="saledivprice"></span>
+            </div>
+        </div>
+
+        <div class="salediv_4">
+            * 월정기 - 확인사항
+        </div>
+
+        <div class="salediv_3div">
+            <span class="pricing-subtitle saleprice">- 등록주기 일정!</span><span class="saledivprice"></span>
+            <br>
+            <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp;/ ex) 첫째주 화요일 수업
+                    - 재등록시 다음달 첫째주 수업 전주 재등록! </span></span>
+        </div>
+
+        <div class="salediv_3div">
+            <span class="pricing-subtitle saleprice">- 수업취소시 딜레이불가능 </span><span class="saledivprice"></span>
+            <br>
+            <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp;/단, 공휴일 또는 원장
+                    개인사정시 딜레이! </span></span>
+        </div>
+
+    
+    </div>
+
+    <ul>
+        <li class="licus"> <!-- 월정기-타입버튼 -->
+            <div class="flex items-center justify-center">
+                <label>
+                    레슨타입 :&nbsp;
+                </label>
+                <input type="radio" id="sgtype12" name="sgtype2" value="50" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();" checked>
+                <label for="sgtype12" class="radio-label no-select">
+                    1:1 개인
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">PT</span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="radio" id="sgtype22" name="sgtype2" value="40" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sgtype22" class="radio-label no-select">
+                    2:1 그룹
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">PT</span></span>
+                </label>
+            </div>
+
+        </li>
+        <li class="licus">
+            <div class="flex items-center justify-center">
+                <label>
+                    과정 :&nbsp;
+                </label>
+                <input type="radio" id="sggj12" name="sggj2" value="50" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();" checked>
+                <label for="sggj12" class="radio-label2 no-select">
+                    취미
+                    <br>
+                    <span class="radio-description"> <span
+                            style="color: gray; font-size: small;"></span></span>
+                </label>
+
+                &nbsp;&nbsp;
+                <input type="radio" id="sggj42" name="sggj2" value="40" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sggj42" class="radio-label2 no-select">
+                    입시
+                    <br>
+                    <span class="radio-description"> <span
+                            style="color: gray; font-size: small;"></span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="radio" id="sggj32" name="sggj2" value="40" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sggj32" class="radio-label2 no-select">
+                    전문
+                    <br>
+                    <span class="radio-description"> <span
+                            style="color: gray; font-size: small;"></span></span>
+                </label>
+            </div>
+
+        </li>
+
+        <li class="licus"> <!-- 수업시간-버튼 -->
+            <div class="flex items-center justify-center">
+                <label>
+                    수업시간 :&nbsp;
+                </label>
+                <input type="radio" id="sgmin12" name="sgmin2" value="50" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();" checked>
+                <label for="sgmin12" class="radio-label2 no-select">
+                    50분
+                    <br>
+                    <span class="radio-description"><span
+                            style="color: gray; font-size: small;"></span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="radio" id="sgmin22" name="sgmin2" value="40" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sgmin22" class="radio-label2 no-select">
+                    40분
+                    <br>
+                    <span class="radio-description"><span
+                            style="color: gray; font-size: small;"></span></span>
+                </label>
+            </div>
+
+        </li>
+
+        <li class="licus"> <!-- 수업횟수-버튼 -->
+            <div class="flex items-center justify-center">
+                <label>
+                    수업횟수 :&nbsp;
+                </label>
+                <input type="radio" id="sgct12" name="sgct2" value="week1" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();" checked>
+                <label for="sgct12" class="radio-label no-select">
+                    주1회
+                    <br>
+                    <span class="radio-description"> / <span
+                            style="color: gray; font-size: small;">총4회</span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="radio" id="sgct22" name="sgct2" value="week2" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sgct22" class="radio-label no-select">
+                    주2회
+                    <br>
+                    <span class="radio-description"> / <span
+                            style="color: gray; font-size: small;">총8회</span></span>
+                </label>
+            </div>
+
+        </li>
+        <!-- <li class="licus">
+            <div class="flex items-center justify-center">
+                <label>
+                    연습실 :&nbsp;
+                </label>
+
+                <input type="radio" id="sgpr1" name="sgpr" value="feature3_1" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();" checked>
+                <label for="sgpr1" class="radio-label">
+                    연습실 O
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">매일2시간</span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="radio" id="sgpr2" name="sgpr" value="feature3_2" class="opacity-0 absolute"
+                    onchange="sgstrjsonPr();">
+                <label for="sgpr2" class="radio-label">
+                    연습실 X
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">별도</span></span>
+                </label>
+            </div>
+
+        </li> -->
+        <!-- <li class="licus">
+            <div class="flex items-center justify-center">
+                <input type="checkbox" id="feature4_1" name="feature4" value="feature4_1"
+                    class="opacity-0 absolute" checked>
+                <label for="feature4_1" class="radio-label">
+                    체크박스1
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">50분수업</span></span>
+                </label>
+                &nbsp;&nbsp;
+                <input type="checkbox" id="feature4_2" name="feature4" value="feature4_2"
+                    class="opacity-0 absolute">
+                <label for="feature4_2" class="radio-label">
+                    체크박스2
+                    <br>
+                    <span class="radio-description"> - <span
+                            style="color: gray; font-size: small;">40분수업</span></span>
+                </label>
+            </div>
+
+        </li> -->
+
+     
+
+   
+
+    </ul>
+    <a href="#" class="cta-button" onclick="chooseplanPr('jgjg');">Choose Plan</a>
+</div>

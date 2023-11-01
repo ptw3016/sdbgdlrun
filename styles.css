@@ -1,0 +1,469 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform-origin: top center;
+}
+
+.pricing-container {
+
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    flex-wrap: wrap;
+
+}
+
+.pricingtitlediv {
+    /* transform: scale(0.9); */
+    text-align: center;
+}
+
+.pricing-card {
+    background-color: #fff;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+    margin: 26px;
+    text-align: center;
+    width: 400px;
+    height: 1300px;
+    padding: 2rem;
+
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, .09);
+    cursor: pointer;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.pricing-card:hover {
+    box-shadow: 10px 10px 11px 2px rgba(0, 0, 0, .09);
+    transform: translateX(-3px) translateY(-3px);
+}
+
+
+
+.pricing-card2 {
+    width: 400px;
+    height: 1150px;
+}
+
+.pricing-card3 {
+    width: 400px;
+    height: 880px;
+}
+
+.pricing-card h2 {
+    color: #333;
+    margin-top: 50px;
+    margin-bottom: 10px;
+    /* Adjusted margin-bottom */
+}
+
+.pricing-card .price {
+    font-size: 40px;
+    color: #d9cba8;
+    font-weight: bold;
+    margin-bottom: 0;
+    /* Adjusted margin-bottom */
+    gap: 0;
+}
+
+.pricing-card .month {
+    color: #666;
+    font-size: 25px;
+}
+
+.pricing-card .periset {
+    color: #4F52618F;
+    font-size: 15px;
+}
+
+.pricing-card .pricesymbol {
+    font-size: 25px;
+    color: #4f5261;
+    vertical-align: top;
+}
+
+.pricing-card ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 30px;
+
+    border-bottom: 2px solid #4F526114;
+}
+
+.pricing-card .licus {
+    border-top: 1px solid #4F526114;
+    padding: 20px 0;
+}
+
+.pricing-card .cta-button {
+    margin-top: 50px;
+    background-color: #d9cba8;
+    border: none;
+    border-radius: 22px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 13px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
+
+}
+
+.pricing-card .cta-button:hover {
+    background-color: #0056b3;
+}
+
+.logo-image {
+
+}
+
+.logo-imagediv {
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.pricing-title {
+    font-size: 48px;
+    letter-spacing: -3px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.pricing-subtitle {
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.pricing-subtitle2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.pricenum {
+    font-size: 50px;
+    color: #d9cba8;
+    font-weight: bold;
+    margin-bottom: 0;
+    /* Adjusted margin-bottom */
+    gap: 0;
+}
+
+.checkbox-label {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* 별도의 클래스로 기본 라디오 버튼 스타일 적용 */
+.custom-radio {
+    display: none;
+
+}
+
+/* 라디오 버튼의 라벨 스타일 */
+.radio-label {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 0.8rem;
+    cursor: pointer;
+}
+
+.radio-label2 {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px 16px;
+    border-radius: 0.8rem;
+    cursor: pointer;
+}
+
+/* 선택된 라디오 버튼의 스타일 */
+input[type="radio"]:checked+label.radio-label {
+    border: 4px solid #ffbf09
+}
+
+input[type="radio"]:checked+label.radio-label2 {
+    border: 4px solid #ffbf09
+}
+
+/* 선택된 라디오 버튼의 스타일 */
+input[type="checkbox"]:checked+label.radio-label {
+    border: 4px solid #ffbf09
+}
+
+.no-select {
+    user-select: none;
+}
+
+.salediv {
+    text-align: left;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+
+    border: 1px solid #989aa5;
+    border-radius: 20px;
+    font-size: 15px;
+}
+
+.salediv_2 {
+    font-weight: bold;
+    line-height: 1.5em;
+    padding-bottom: 0px;
+    border-bottom: 2px solid #f4f4f4;
+}
+
+.salediv_3 {
+    font-weight: normal;
+    line-height: 1.5em;
+    padding: 2px 3px 0px 3px;
+}
+
+.salediv_4 {
+    font-weight: bold;
+    line-height: 1.5em;
+    padding: 15px 0px 0px 0px;
+    border-bottom: 2px solid #f4f4f4;
+
+}
+
+.saledivprice {
+    /* float: right; */
+    padding-right: 10px;
+}
+
+.salediv_3div {
+    padding-bottom: 4px;
+}
+
+.chplantitle {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 0.9;
+}
+
+.chplanbox1 {
+    width: 200px;
+    height: 200px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    flex-wrap: wrap;
+    background-color: #fff;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+}
+
+/* 스타일을 정의합니다. */
+
+
+
+
+.title2 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.buttons2 {
+    display: flex;
+    flex-direction: row;
+    /* 버튼들을 가로로 배치합니다. */
+    gap: 10px;
+    /* 각 버튼 사이의 간격을 설정합니다. */
+}
+
+.button2 {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modalcont {
+    display: flex;
+    flex-direction: row;
+    /* 버튼들을 가로로 배치합니다. */
+    gap: 10px;
+    /* 각 버튼 사이의 간격을 설정합니다. */
+    margin-bottom: 10px;
+
+}
+
+.modalmain {
+    width: 520px;
+    height: 500px;
+    gap: 25px;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    box-shadow: 6px 7px 14px 2px rgba(0, 0, 0, .09);
+
+}
+
+.modalbodyalign {
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: row;
+    /* 버튼들을 가로로 배치합니다. */
+    gap: 40px;
+}
+
+
+.modalchkstr {
+    width: 430px;
+    height: 500px;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    padding: 10px;
+    box-shadow: 6px 7px 14px 2px rgba(0, 0, 0, .09);
+}
+
+.modalchkstr2 {
+    width: 430px;
+    height: 500px;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    padding: 10px;
+    box-shadow: 6px 7px 14px 2px rgba(0, 0, 0, .09);
+}
+
+.mdprice {
+    font-size: 52px;
+    color: #d9cba8;
+    font-weight: bold;
+}
+
+.mdpricesymbol {
+    font-size: 30px;
+    color: #4f5261;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+.mdmonth {
+    color: #666;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.mdperiset {
+    color: #4F52618F;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.mdpricect {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    text-align: center;
+
+}
+
+.mdsalediv_3div {
+    padding-bottom: 16px;
+    font-size: 12px;
+}
+
+
+.mdsalediv_2 {
+    font-weight: bold;
+    line-height: 1.5em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f4f4f4;
+}
+
+.mdsaledivtt {
+    margin-bottom: 4px;
+}
+
+.mdsaledivttct {
+    font-size: 18px;
+}
+.container2 {
+    width: 230px;
+    height: 220px;
+    background-color: #fff;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    padding: 30px 10px 0px 10px;
+
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, .09);
+    cursor: pointer;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.container2:hover {
+    box-shadow: 10px 10px 11px 2px rgba(0, 0, 0, .09);
+    transform: translateX(-3px) translateY(-3px);
+}
+
+.container4 {
+    width: 388px;
+    height: 472px;
+    background-color: #fff;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    padding: 30px 10px 0px 10px;
+    
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, .09);
+    cursor: pointer;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.container4:hover {
+    box-shadow: 10px 10px 11px 2px rgba(0, 0, 0, .09);
+    transform: translateX(-3px) translateY(-3px);
+}
+
+
+.container3 {
+    width: 400px;
+    height: 228px;
+    background-color: #fff;
+    border: 2px solid #4F526114;
+    border-radius: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    padding: 30px 10px 0px 10px;
+        
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, .09);
+    cursor: pointer;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.container3:hover {
+    box-shadow: 10px 10px 11px 2px rgba(0, 0, 0, .09);
+    transform: translateX(-3px) translateY(-3px);
+}
+

@@ -12,6 +12,123 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" rel="stylesheet">
     <style>
+        .dlstatediv {
+            box-shadow: 0px 1px 0px 0px #1c1b18;
+            background: linear-gradient(to bottom right, #ffffff 5%, #bdbdbd9c 100%);
+            background-color: #ffffff;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 200px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            display: inline-block;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+            /* 오른쪽 아래 그림자 추가 */
+
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: transparent;
+            border-radius: 6px;
+            background-image: linear-gradient(45deg, rgba(0, 0, 255, 0.5) 25%, transparent 25%, transparent 50%, rgba(0, 0, 255, 0.5) 50%, rgba(0, 0, 255, 0.5) 75%, transparent 75%, transparent);
+
+            background-size: 20px 20px;
+            transition: width 3s ease-in-out;
+            animation: slide 3s linear infinite;
+            will-change: background-position;
+
+        }
+
+        @media only screen and (max-width: 450px) {
+            .bar {
+                width: calc(113px * 3);
+            }
+        }
+
+        @media only screen and (max-width: 350px) {
+            .bar {
+                width: calc(113px * 2);
+            }
+        }
+
+        @keyframes slide {
+            from {
+                background-position-x: 0;
+            }
+
+            to {
+                background-position-x: 113px;
+            }
+        }
+
+        .progress-text {
+            padding-top: 10px;
+            font-size: 13px;
+            color: rgb(0, 0, 0);
+        }
+
+        .progress-text2 {
+            padding-bottom: 13px;
+            font-size: 18px;
+            font-weight: bold;
+            color: rgb(0, 0, 0);
+        }
+
+        .progressdiv {
+
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* 반투명 배경색 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+            /* 다른 요소 위에 표시하기 위한 z-index 값 */
+        }
+
+        .prssubdiv {
+            display: flex;
+            width: 280px;
+            height: 131px;
+            box-shadow: 0px 1px 0px 0px #1c1b18;
+            background: linear-gradient(to bottom right, #ffffff 5%, #b7b7b78c 100%);
+            background-color: #ffffff;
+            border-radius: 33px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .prbarperctext {
+
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 28px;
+            position: absolute;
+            top: 50%;
+            /* 수직 정렬을 위해 컨테이너의 중앙으로 이동 */
+            left: 0;
+            right: 0;
+            transform: translate(0, -40%);
+            /* 수직 정렬을 위한 변환 */
+            color: rgb(0, 0, 0);
+            /* 텍스트 색상 설정 */
+        }
+
+
+
         body {
             position: relative;
             background-image: url('https://sharpdrum.co.kr/wp-content/uploads/2022/04/꾸미기vlcsnap-2022-04-12-15h59m49s892-1.jpg');
@@ -105,6 +222,23 @@
         <div class="spinner"></div>
     </div>
 
+    <div class="progressdiv" id="prgrsbarloading">
+        <div class="prssubdiv">
+            <div>
+                <div class="progress-text2">실행중..</div>
+            </div>
+            <div class="progress-container" style="padding:2px;">
+
+                <div class="progress-bar" id="myProgressBar">
+                    <div class="prbarperctext"></div>
+                </div>
+            </div>
+            <div>
+                <div class="progress-text">ready</div>
+            </div>
+        </div>
+    </div>
+
     <div class="">
         <img src="https://sharpdrum.co.kr/wp-content/uploads/2023/09/sdlogowhite.png" alt="로고" class="logo">
     </div>
@@ -122,12 +256,7 @@
             <div id="circle4" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
             <div id="circle5" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
             <div id="circle6" class="mx-2"><i class="fa-solid fa-drum text-2xl text-white"></i></div>
-            <!-- <div id="circle1" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle2" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle3" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle4" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle5" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div>
-            <div id="circle6" class="w-6 h-6 border bg-white bg-opacity-0 rounded-full mx-2"></div> -->
+
         </div>
 
         <div class="mb-7"></div>
@@ -200,7 +329,7 @@
         <div class="mb-7"></div>
 
         <div class="flex mt-2 mb-2"> <!-- 간격 조정 -->
-            <button id="circl" class="flex items-center w-30 h-8 bg-white rounded-full mx-2 shadow"
+            <button id="circl" class="flex items-center w-30 h-8 bg-white rounded-full mx-2 shadow dlstatediv"
                 style="padding-right: 10px; padding-left: 10px; padding-top: 20px; padding-bottom: 20px;">
                 <span class="ml-2 font-bold" style="display: flex; align-items: center; height: 100%;">도어락상태&nbsp</span>
                 <div id="circl2"><i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></div>
@@ -213,7 +342,7 @@
     <!-- 모달 팝업 -->
     <div id="myModal" class="fixed top-0 right-0 bottom-0 left-0 flex items-center justify-center hidden">
         <div class="absolute w-full h-full bg-black opacity-40"></div>
-        <div class="bg-white rounded-xl z-10 relative">
+        <div class="bg-white rounded-xl z-10 relative" style="border-radius:1.75rem;">
             <!-- 모달 닫기 버튼 -->
             <button id="closeModalButton"
                 class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
@@ -224,12 +353,14 @@
                 </svg>
             </button>
             <!-- 모달 내용 -->
-            <div class="p-10">
+            <div class="p-9">
                 <div id="modal-body">
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <script>
         dlchkPr();
@@ -296,58 +427,12 @@
                 alert("6자리 모두 입력해주세요!");
                 return;
             }
-            const sgid = document.getElementById("hiddenField").value;
-            loadingScreen.style.display = 'flex';
 
-            fetch('/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ enteredCode, sgid }), // 입력한 코드를 JSON으로 전송합니다.
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    // 서버로부터 받은 응답을 처리
-                    //alert("서버 응답: " + JSONtringify(data));
+            loadingprsbar();  //open 실행하기!
 
-                    loadingScreen.style.display = 'none';
-                    const rststring = JSON.stringify(data);
-                    const rststr = rststring.message;
-                    const rstmsgsw = data.msgsw;
-                    const rststate = data.drstate;
-                    let iconvalue = ""
-                    if (rstmsgsw == "qrerror") {
-                        window.location.pathname = '/drchkin/qrerror';
-                        return;
-                    }
-
-                    if (rstmsgsw == "check") {
-                        iconvalue = "fa-solid fa-circle-check text-5xl text-blue-600";
-                    } else if (rstmsgsw == "precheck") {
-                        iconvalue = "fa-solid fa-circle-check text-5xl text-green-500";
-                    } else if (rstmsgsw == "errorchk") {
-                        iconvalue = "fa-solid fa-circle-xmark text-5xl text-red-500";
-                    } else {
-                        iconvalue = "fa-solid fa-circle-exclamation text-5xl text-red-500";
-                    }
-
-                    const modalContent = `
-                <p class="text-3xl font-bold text-center"><i class="${iconvalue}"></i></p>
-                <div class="mb-2"></div>
-                    <p class="text-2xl font-bold text-center mb-2">${data.message}</p>
-                    <p class="font-light custom-text-size text-center">${data.admsg}</p>`;
+            // loadingScreen.style.display = 'flex';
 
 
-                    openModal(modalContent);
-                    const circl2 = document.getElementById('circl2');
-                    if (rststate == "open") {
-                        circl2.innerHTML = `<i class='fa-solid fa-lock-open mr-2 text-green-600 text-xl'></i>`;
-                    } else if (rststate == "closed") {
-                        circl2.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
-                    }
-                    clearCircles();
-                });
         }
 
         function clearCircles() {  //초기화
@@ -449,6 +534,244 @@
 
 
 
+
+        function loadingprsbar() {
+
+            let prsbarloadchk = "";
+            let rststatechk = "";
+            let rstmsg = "";
+            let rstadmsg = "";
+            let rstmsgsw = "";
+            let description = "...";
+            let description2 = "...";
+            const progressBar = document.getElementById('myProgressBar');
+            const progressText = document.querySelector('.progress-text');
+            const prbarperctext = document.querySelector('.prbarperctext');
+            const prbardiv = document.getElementById("prgrsbarloading");
+            const sgid = document.getElementById("hiddenField").value;
+            progressBar.style.width = '1%';
+            prbarperctext.innerText = '1%';
+            prbardiv.style.display = "flex";
+            description2 = "sharpdrum doorlock run!";
+            progressText.innerText = description2; // 텍스트 내용 변경
+
+            progressBar.style.width = '10%';
+            prbarperctext.innerText = '10%';
+
+
+            prsbarloadchk = setInterval(() => {
+                const containerWidth = progressBar.parentElement.clientWidth - 4;  //padding 값빼주기
+                const progressBarWidth = (progressBar.clientWidth / containerWidth) * 100;
+                const roundedWidth = Math.round(progressBarWidth); // 너비를 정수로 반올림
+                prbarperctext.innerText = roundedWidth + '%';
+
+                if (roundedWidth == 100) {
+                    clearInterval(prsbarloadchk);
+                    description2 = "도어락이 열렸습니다 즐거운 연습되세요!!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+                    setTimeout(() => {
+                        prbardiv.style.display = "none";
+                        var datastr = {
+                            msgsw: "check",
+                            drstate: "open", //현재상태준비
+                            message: "도어락이 열렸습니다!!",
+                            admsg: "즐거운 연습되세요!!"
+                        }
+                        rstmodalopen(datastr);
+                        clearCircles();
+
+                    }, 2000);
+                } else if (roundedWidth == 21) { //완료시!
+                    description2 = "member check success!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+
+                } else if (roundedWidth == 12) { //완료시!
+                    description2 = "qr stamp check success!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+                } else if (roundedWidth == 31) { //완료시!
+                    description2 = "doorlock state check...!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+                }else if (roundedWidth == 60) { //완료시!
+                    description2 = "doorlock state check:OK!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+                }  else if (roundedWidth == 71) { //완료시!
+                    description2 = "doorlock open start!!";
+                    progressText.innerText = description2; // 텍스트 내용 변경
+                }
+            }, 100); // 1초마다 업데이트
+
+
+            fetch('/tokenchk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enteredCode, sgid }), // 입력한 코드를 JSON으로 전송합니다.
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    rststatechk = data.drstate;
+                    rstmsg = data.message;
+                    rstadmsg = data.admsg;
+                    rstmsgsw = data.msgsw;
+                    if (rstmsgsw == "check") {
+
+                        if (EventSource) {
+
+                            const eventSource = new EventSource('/submit');
+                            eventSource.onmessage = (event) => {
+
+                                const data = JSON.parse(event.data);
+
+                                const progress = data;
+                                progressBar.style.width = progress + '%';
+
+                                progressBar.style.textAlign = "center";
+
+
+                                switch (progress) { // width 값에 따라 설명 값 변경
+
+                                    case 60:
+                                        description = "doorlock open start!";
+                                        break;
+
+                                    // case 60:
+                                    //     description = "doorlock open request : success";
+                                    //     break;
+
+                                    // case 80:
+                                    //     description = "doorlock open request : faild";
+                                    //     break;
+
+
+                                }
+                                progressText.innerText = description; // 텍스트 내용 변경
+
+                                if (progress === 100) {
+                                    logappend(progress);
+                                    eventSource.close();
+                                } else if (progress === 82) {
+                                    logappend(progress);
+                                    prbardiv.style.display = "none";
+                                    clearCircles();
+
+                                    var datastr = {
+                                        msgsw: "errorchk",
+                                        drstate: rststatechk,
+                                        message: "도어락에 문제가 있습니다.",
+                                        admsg: `도어락을 여는 데 실패할 경우 다시 시도해보시고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-01048338274]`
+                                    }
+                                    rstmodalopen(datastr);
+                                    eventSource.close();
+                                } else if (progress === 51) {
+
+                                    logappend(progress);
+                                    prbardiv.style.display = "none";
+                                    clearCircles();
+                                    var datastr = {
+                                        msgsw: "precheck",
+                                        drstate: rststatechk,
+                                        message: "이미 도어락이 열려있습니다.",
+                                        admsg: ""
+                                    }
+                                    rstmodalopen(datastr);
+                                    eventSource.close();
+                                } else if (progress === 83) {
+
+                                    logappend(progress);
+                                    prbardiv.style.display = "none";
+                                    clearCircles();
+                                    var datastr = {
+                                        msgsw: "errorchk",
+                                        drstate: rststatechk,
+                                        message: "도어락에 문제가 있습니다.",
+                                        admsg: `도어락을 여는 데 실패할 경우 다시 시도해보시고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-01048338274]`
+                                    }
+                                    rstmodalopen(datastr);
+                                    eventSource.close();
+                                }
+                            };
+
+                            eventSource.onerror = (error) => {
+                                console.error('EventSource failed:', error);
+                                eventSource.close();
+                            };
+                        } else {
+                            console.error('EventSource is not supported in this browser.');
+                        }
+                    } else {
+                        //stamp,pass 확인실패시!
+                        if (rstmsgsw == "qrerror") {
+                            progressText.innerText = "qrcode expiration"; // 
+                        } else if (rstmsgsw == "errorchk") {
+                            progressText.innerText = "password check failed"; // 
+                        } else if (rstmsgsw == "errorchk2") {
+                            progressText.innerText = "password expiration!"; // 
+                        }
+
+                        //}
+                        prbardiv.style.display = "none";
+                        progressBar.style.width = '10%';  //transition 때문 시간차있음
+
+                        clearCircles();
+                        var datastr = {
+                            msgsw: rstmsgsw,
+                            drstate: rststatechk,  //현재상태
+                            message: rstmsg,
+                            admsg: rstadmsg
+                        }
+                        rstmodalopen(datastr);
+                    }
+                });
+        }
+
+
+        function rstmodalopen(data) {
+            const rstmsgsw = data.msgsw;
+            const rststate = data.drstate;
+            let iconvalue = ""
+            if (rstmsgsw == "qrerror") {
+                window.location.pathname = '/drchkin/qrerror';
+                return;
+            } else if (rstmsgsw == "check") {
+                iconvalue = "fa-solid fa-circle-check text-5xl text-blue-600";
+            } else if (rstmsgsw == "precheck") {
+                iconvalue = "fa-solid fa-circle-check text-5xl text-green-500";
+            } else if (rstmsgsw == "errorchk" || rstmsgsw == "errorchk2") {
+                iconvalue = "fa-solid fa-circle-xmark text-5xl text-red-500";
+            } else {
+                iconvalue = "fa-solid fa-circle-exclamation text-5xl text-red-500";
+            }
+
+            const modalContent = `
+                <p class="text-3xl font-bold text-center"><i class="${iconvalue}"></i></p>
+                <div class="mb-4"></div>
+                    <p class="text-2xl font-bold text-center mb-3">${data.message}</p>
+                    <p class="font-light custom-text-size text-center" style="line-height:23px;">${data.admsg}</p>`;
+
+
+            openModal(modalContent);
+            const circl2 = document.getElementById('circl2');
+
+            if (rststate == "open") {
+                circl2.innerHTML = `<i class='fa-solid fa-lock-open mr-2 text-green-600 text-xl'></i>`;
+            } else if (rststate == "closed") {
+                circl2.innerHTML = `<i class="fa-solid fa-lock mr-2 text-blue-600 text-xl"></i></i>`;
+            }
+        }
+
+        function logappend(rstnum) {
+            fetch('/rstlogappend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ enteredCode, rstnum }), //
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                });
+        }
     </script>
 </body>
 

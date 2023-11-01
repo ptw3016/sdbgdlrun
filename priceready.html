@@ -2,592 +2,238 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .pricing-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .pricing-card {
-            background-color: #fff;
-            border: 2px solid #4F526114;
-            border-radius: 1.5rem;
-            /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-            margin: 26px;
-            text-align: center;
-            width: 400px;
-            height: 1200px;
-            padding: 2rem;
-        }
-
-        .pricing-card h2 {
-            color: #333;
-            margin-top: 50px;
-            margin-bottom: 10px;
-            /* Adjusted margin-bottom */
-        }
-
-        .pricing-card .price {
-            font-size: 50px;
-            color: #d9cba8;
-            font-weight: bold;
-            margin-bottom: 0;
-            /* Adjusted margin-bottom */
-            gap: 0;
-        }
-
-        .pricing-card .month {
-            color: #666;
-            font-size: 25px;
-        }
-
-        .pricing-card .periset {
-            color: #4F52618F;
-            font-size: 15px;
-        }
-
-        .pricing-card .pricesymbol {
-            font-size: 30px;
-            color: #4f5261;
-            vertical-align: top;
-        }
-
-        .pricing-card ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-            margin-bottom: 30px;
-
-            border-bottom: 1px solid #4F526114;
-        }
-
-        .pricing-card .licus {
-            border-top: 1px solid #4F526114;
-            padding: 20px 0;
-        }
-
-        .pricing-card .cta-button {
-            margin-top: 50px;
-            background-color: #d9cba8;
-            border: none;
-            border-radius: 22px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 13px 20px;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s;
-
-        }
-
-        .pricing-card .cta-button:hover {
-            background-color: #0056b3;
-        }
-
-        .pricing-title {
-            font-size: 50px;
-            color: #333;
-            margin-top: 50px;
-            margin-bottom: 10px;
-        }
-
-        .pricing-subtitle {
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .pricing-subtitle2 {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .pricenum {
-            font-size: 50px;
-            color: #d9cba8;
-            font-weight: bold;
-            margin-bottom: 0;
-            /* Adjusted margin-bottom */
-            gap: 0;
-        }
-
-        .checkbox-label {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        /* 별도의 클래스로 기본 라디오 버튼 스타일 적용 */
-        .custom-radio {
-            display: none;
-
-        }
-
-        /* 라디오 버튼의 라벨 스타일 */
-        .radio-label {
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 8px 16px;
-            border-radius: 0.8rem;
-            cursor: pointer;
-        }
-
-        /* 선택된 라디오 버튼의 스타일 */
-        input[type="radio"]:checked+label.radio-label {
-            border: 2px solid blue;
-        }
-
-        /* 선택된 라디오 버튼의 스타일 */
-        input[type="checkbox"]:checked+label.radio-label {
-            border: 2px solid blue;
-        }
-
-        .no-select {
-            user-select: none;
-        }
-
-        .salediv {
-            text-align: left;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            padding: 20px;
-
-            border: 1px solid #989aa5;
-            border-radius: 20px;
-            font-size: 15px;
-        }
-
-        .salediv_2 {
-            font-weight: bold;
-            line-height: 1.5em;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f4f4f4;
-        }
-
-        .salediv_3 {
-            font-weight: bold;
-            line-height: 1.5em;
-
-            border-bottom: 1px solid #f4f4f4;
-        }
-
-        .saledivprice {
-            float: right;
-            padding-right: 10px;
-        }
+        /*{styles.css}*/
     </style>
 </head>
 
 <body>
-    <h1 class="pricing-title">Our Pricing Plans</h1>
-    <p class="pricing-subtitle">레슨 견적표</p>
 
-    <div class="pricing-container">
-        <div class="pricing-card">
-            <h2 class="pricing-subtitle2">드럼레슨_정규반 [횟수제]</h2>
-            <p class="pricing-subtitle">연습보다 레슨이 우선인 <br>분들에게 적합합니다.</p>
 
-            <div class="price">
-                <span class="pricesymbol">￦&nbsp</span><span class="jgctprice">9.99</span>&nbsp<span
-                    class="month">/4회</span><span class="periset">[50분]</span>
+    <@@pricefullmodal.html@@>
+        <div class="pricingtitlediv">
+            
+            <div class="logo-imagediv">
+                <img src="sdlogo.png" alt="logo" class="logo-image" style="width: 150px;">
             </div>
+            <h1 class="pricing-title">샵드럼 레슨 Plans</h1>
+            <p class="pricing-subtitle">레슨 견적표</p>
+            <div class="pricing-container">
 
-            <div>
-                <span class="pricing-subtitle pricedesc"></span>
+                <@@pricing-card1.html@@>
+                    <@@pricing-card2.html@@>
+                        <@@pricing-card3.html@@>
             </div>
-
-            <div class="salediv">
-                <div class="salediv_2">
-                    * 할인혜택
-                </div>
-
-                <div class="salediv_3">
-                    <div>
-                        <span class="pricing-subtitle saleprice"></span><span class="saledivprice">200,000원</span>
-                    </div>
-                </div>
-
-
-            </div>
-
-
-
-            <ul>
-                <li class="licus">
-                    <div class="flex items-center justify-center">
-                        <label>
-                            레슨타입 :&nbsp;
-                        </label>
-                        <input type="radio" id="sgtype1" name="sgtype" value="50" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();" checked>
-                        <label for="sgtype1" class="radio-label no-select">
-                            1:1 개인
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">PT</span></span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <input type="radio" id="sgtype2" name="sgtype" value="40" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();">
-                        <label for="sgtype2" class="radio-label no-select">
-                            2:1 그룹
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">PT</span></span>
-                        </label>
-                    </div>
-
-                </li>
-                <li class="licus">
-                    <div class="flex items-center justify-center">
-                        <label>
-                            수업시간 :&nbsp;
-                        </label>
-                        <input type="radio" id="sgmin1" name="sgmin" value="50" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();" checked>
-                        <label for="sgmin1" class="radio-label no-select">
-                            50분
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">50분수업</span></span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <input type="radio" id="sgmin2" name="sgmin" value="40" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();">
-                        <label for="sgmin2" class="radio-label no-select">
-                            40분
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">40분수업</span></span>
-                        </label>
-                    </div>
-
-                </li>
-
-                <li class="licus">
-                    <div class="flex items-center justify-center">
-                        <label>
-                            수업횟수 :&nbsp;
-                        </label>
-                        <input type="radio" id="sgct1" name="sgct" value="week1" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();" checked>
-                        <label for="sgct1" class="radio-label no-select">
-                            주1회
-                            <br>
-                            <span class="radio-description"> / <span
-                                    style="color: gray; font-size: small;">총4회</span></span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <input type="radio" id="sgct2" name="sgct" value="week2" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();">
-                        <label for="sgct2" class="radio-label no-select">
-                            주2회
-                            <br>
-                            <span class="radio-description"> / <span
-                                    style="color: gray; font-size: small;">총8회</span></span>
-                        </label>
-                    </div>
-
-                </li>
-                <!-- <li class="licus">
-                    <div class="flex items-center justify-center">
-                        <label>
-                            연습실 :&nbsp;
-                        </label>
-
-                        <input type="radio" id="sgpr1" name="sgpr" value="feature3_1" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();" checked>
-                        <label for="sgpr1" class="radio-label">
-                            연습실 O
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">매일2시간</span></span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <input type="radio" id="sgpr2" name="sgpr" value="feature3_2" class="opacity-0 absolute"
-                            onchange="sgstrjsonPr();">
-                        <label for="sgpr2" class="radio-label">
-                            연습실 X
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">별도</span></span>
-                        </label>
-                    </div>
-
-                </li> -->
-                <!-- <li class="licus">
-                    <div class="flex items-center justify-center">
-                        <input type="checkbox" id="feature4_1" name="feature4" value="feature4_1"
-                            class="opacity-0 absolute" checked>
-                        <label for="feature4_1" class="radio-label">
-                            체크박스1
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">50분수업</span></span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <input type="checkbox" id="feature4_2" name="feature4" value="feature4_2"
-                            class="opacity-0 absolute">
-                        <label for="feature4_2" class="radio-label">
-                            체크박스2
-                            <br>
-                            <span class="radio-description"> - <span
-                                    style="color: gray; font-size: small;">40분수업</span></span>
-                        </label>
-                    </div>
-
-                </li> -->
-
-
-                <li class="licus">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="radio13" name="feature2" value="9.99">
-                        * 연속출석 - 다음달 할인적용
-                        <br>
-                        <span class="radio-description"> / <span style="color: gray; font-size: small;">ex) 4주 연속 무결시 -
-                                할인적용</span></span>
-                    </label>
-                </li>
-                <li class="licus">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="radio11" name="feature2" value="9.99">
-                        * 하루전날 연락 - 딜레이가능
-                    </label>
-                </li>
-                <li class="licus">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="radio12" name="feature2" value="9.99">
-                        * 당일취소 - 결시처리(1회차감)
-                    </label>
-                </li>
-                <li class="licus">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="radio12" name="feature2" value="9.99">
-                        * 3주이상 결석시 정규반 편성제외
-                    </label>
-                </li>
-
-            </ul>
-            <a href="#" class="cta-button">Choose Plan</a>
         </div>
+        <script>
 
-        <div class="pricing-card">
-            <h2>정규반 [월정기]</h2>
-            <div class="price">
-                <span class="pricesymbol">￦</span><span class="pricenum">&nbsp9.99</span><span
-                    class="month">&nbsp/month</span>
-            </div>
-            <ul>
-                <li>Feature 4</li>
-                <li>Feature 5</li>
-                <li>Feature 6</li>
-            </ul>
-            <a href="#" class="cta-button">Choose Plan</a>
-        </div>
+            document.addEventListener("DOMContentLoaded", function () {
 
-        <div class="pricing-card">
-            <h2>단회반</h2>
-            <div class="price">
-                <span class="pricesymbol">￦</span><span class="pricenum">&nbsp9.99</span><span
-                    class="month">&nbsp/month</span>
-            </div>
-            <ul>
-                <li>Feature 7</li>
-                <li>Feature 8</li>
-                <li>Feature 9</li>
-            </ul>
-            <a href="#" class="cta-button">Choose Plan</a>
-        </div>
-    </div>
+                const sgct1 = document.getElementById('sgct1');
 
-    <script>
-        let totalgsstr = {
-            sgmin: "50분",
-            sgct: "주1회(총4회)",
-            sgpr: "연습실O",
-            sgprice: 240000,
-        };
+                const sgmin1 = document.getElementById('sgmin1');
+                const sgmin2 = document.getElementById('sgmin2');
+                const feature3_1 = document.getElementById('feature3_1');
+                const feature3_2 = document.getElementById('feature3_2');
+                const feature2_2 = document.getElementById('feature2_2');
+                sgstrjsonPr();
 
+                // 추가: 초기 상태 설정
+                sgct1.checked = true;
 
+                // // 노래1 체크박스 요소 가져오기
+                // const checkbox1 = document.getElementById('feature4_1');
+                // // 노래2 체크박스 요소 가져오기
+                // const checkbox2 = document.getElementById('feature4_2');
 
-        document.addEventListener("DOMContentLoaded", function () {
+                // // 노래1 체크박스가 변경될 때
+                // checkbox1.addEventListener('change', () => {
+                //     // 체크되었을 때의 동작을 여기에 작성
+                //     if (checkbox1.checked) {
+                //         // 체크되었을 때 할 작업
+                //     } else {
+                //         // 체크 해제됐을 때 할 작업
+                //     }
+                // });
 
-            const sgct1 = document.getElementById('sgct1');
+                // // 노래2 체크박스가 변경될 때
+                // checkbox2.addEventListener('change', () => {
+                //     // 체크되었을 때의 동작을 여기에 작성
+                //     if (checkbox2.checked) {
+                //         // 체크되었을 때 할 작업
+                //     } else {
+                //         // 체크 해제됐을 때 할 작업
+                //     }
+                // });
 
-            const sgmin1 = document.getElementById('sgmin1');
-            const sgmin2 = document.getElementById('sgmin2');
-            const feature3_1 = document.getElementById('feature3_1');
-            const feature3_2 = document.getElementById('feature3_2');
-            const feature2_2 = document.getElementById('feature2_2');
-            sgstrjsonPr();
+                // // 초기 상태 설정
+                // checkbox1.checked = true;
+            });
 
+            function sgstrjsonPr() {
+                const sgtype1chk = document.getElementById("sgtype1").checked;
+                const sgtype2chk = document.getElementById("sgtype2").checked;
+                const sgmin1chk = document.getElementById("sgmin1").checked;
+                const sgmin2chk = document.getElementById("sgmin2").checked;
+                const sgct1chk = document.getElementById("sgct1").checked;
+                const sgct2chk = document.getElementById("sgct2").checked;
+                // const sgpr1chk = document.getElementById("sgpr1").checked;
+                // const sgpr2chk = document.getElementById("sgpr2").checked;
 
-            // 추가: 초기 상태 설정
-            sgct1.checked = true;
+                let sgprice_ps1_50min_4ct = 240000;
+                let sgprice_ps1_40min_4ct = 200000;
+                let sgprice_ps1_50min_8ct = 480000;
+                let sgprice_ps1_40min_8ct = 400000;
+                let sgprice_ps2_50min_4ct = 150000;
+                let sgprice_ps2_40min_4ct = 130000;
+                let sgsaleprice = 0;
 
-            // // 노래1 체크박스 요소 가져오기
-            // const checkbox1 = document.getElementById('feature4_1');
-            // // 노래2 체크박스 요소 가져오기
-            // const checkbox2 = document.getElementById('feature4_2');
-
-            // // 노래1 체크박스가 변경될 때
-            // checkbox1.addEventListener('change', () => {
-            //     // 체크되었을 때의 동작을 여기에 작성
-            //     if (checkbox1.checked) {
-            //         // 체크되었을 때 할 작업
-            //     } else {
-            //         // 체크 해제됐을 때 할 작업
-            //     }
-            // });
-
-            // // 노래2 체크박스가 변경될 때
-            // checkbox2.addEventListener('change', () => {
-            //     // 체크되었을 때의 동작을 여기에 작성
-            //     if (checkbox2.checked) {
-            //         // 체크되었을 때 할 작업
-            //     } else {
-            //         // 체크 해제됐을 때 할 작업
-            //     }
-            // });
-
-            // // 초기 상태 설정
-            // checkbox1.checked = true;
-        });
-
-        function sgstrjsonPr() {
-            const sgtype1chk = document.getElementById("sgtype1").checked;
-            const sgtype2chk = document.getElementById("sgtype2").checked;
-            const sgmin1chk = document.getElementById("sgmin1").checked;
-            const sgmin2chk = document.getElementById("sgmin2").checked;
-            const sgct1chk = document.getElementById("sgct1").checked;
-            const sgct2chk = document.getElementById("sgct2").checked;
-            // const sgpr1chk = document.getElementById("sgpr1").checked;
-            // const sgpr2chk = document.getElementById("sgpr2").checked;
-
-            let sgprice_ps1_50min_4ct = 240000;
-            let sgprice_ps1_40min_4ct = 200000;
-            let sgprice_ps1_50min_8ct = 480000;
-            let sgprice_ps1_40min_8ct = 400000;
-            let sgprice_ps2_50min_4ct = 150000;
-            let sgprice_ps2_40min_4ct = 130000;
-            let sgsaleprice = 0;
-
-            const jgctpriceip = document.querySelector('.price .jgctprice');
-            const jgctmonthip = document.querySelector('.price .month');
-            const jgctperisetip = document.querySelector('.price .periset');
-            const pricedesc = document.querySelector('.pricedesc');
-            const saleprice = document.querySelector('.saleprice');
-            const saledivprice = document.querySelector('.saledivprice');
+                const jgctpriceip = document.querySelector('.price .jgctprice');
+                const jgctmonthip = document.querySelector('.price .month');
+                const jgctperisetip = document.querySelector('.price .periset');
+                const pricedesc = document.querySelector('.pricedesc');
+                const saleprice = document.querySelector('.saleprice');
+                const saledivprice = document.querySelector('.saledivprice');
 
 
-            let sgtype = "";
-            let sgmin = "";
-            let sgct = "";
-            let sgpr = "";
-            let sgsalepr = 0;
+                let sgtype = "";
+                let sgmin = "";
+                let sgct = "";
+                let sgpr = "";
+                let sgsalepr = 0;
 
-            if (sgtype1chk == true) {
-                sgtype = "[1:1개인]";
-                sgpr = "연습실(매일2시간)"
+                if (sgtype1chk == true) {
+                    sgtype = "[1:1개인]";
+                    sgpr = "연습실(매일2시간)"
 
-            } else if (sgtype2chk == true) {
-                sgtype = "[2:1그룹]";
-                sgpr = "연습실별도"
+                } else if (sgtype2chk == true) {
+                    sgtype = "[2:1그룹]";
+                    sgpr = "연습실별도"
+                }
+
+                if (sgmin1chk == true) {
+                    sgmin = "[50분]";
+                } else if (sgmin2chk == true) {
+                    sgmin = "[40분]";
+                }
+
+
+                if (sgct1chk == true) {
+                    sgct = "4회"
+
+                } else if (sgct2chk == true) {
+                    sgct = "8회"
+                }
+
+                // if (sgpr1chk == true) {
+                //     sgpr = "연습실O"
+
+                // } else if (sgpr2chk == true) {
+                //     sgpr = "연습실X"
+                // }
+
+                if (sgmin1chk == true && sgct1chk == true && sgtype1chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps1_50min_4ct);
+                    sgsaleprice = 200000;
+                } else if (sgmin2chk == true && sgct1chk == true && sgtype1chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps1_40min_4ct);
+                    sgsaleprice = 160000;
+                } else if (sgmin1chk == true && sgct2chk == true && sgtype1chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps1_50min_8ct);
+                    sgsaleprice = 400000;
+                } else if (sgmin2chk == true && sgct2chk == true && sgtype1chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps1_40min_8ct);
+                    sgsaleprice = 320000;
+                } else if (sgmin1chk == true && sgct1chk == true && sgtype2chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps2_50min_4ct);
+                    sgsaleprice = 130000;
+                } else if (sgmin2chk == true && sgct1chk == true && sgtype2chk == true) {
+                    jgctpriceip.innerText = addCommas(sgprice_ps2_40min_4ct);
+                    sgsaleprice = 130000;
+                }
+
+
+                jgctperisetip.innerText = sgmin;
+                jgctmonthip.innerText = "/" + sgct;
+                // saleprice.innerText = "- 연속출석_다음달 할인적용 : ";
+                pricedesc.innerText = sgtype + " , " + sgmin + " , " + sgct + " , " + sgpr;
+                saledivprice.innerText = addCommas(sgsaleprice) + "원";
+
+
             }
 
-            if (sgmin1chk == true) {
-                sgmin = "[50분]";
-            } else if (sgmin2chk == true) {
-                sgmin = "[40분]";
+            function addCommas(number) {
+                // 숫자를 문자열로 변환
+                number = number.toString();
+
+                // 소수점을 분리
+                var parts = number.split(".");
+                var integerPart = parts[0];
+                var decimalPart = parts[1] || "";
+
+                // 세 자리마다 쉼표 추가
+                var integerWithCommas = "";
+                for (var i = 0; i < integerPart.length; i++) {
+                    integerWithCommas = integerPart[integerPart.length - 1 - i] + integerWithCommas;
+                    if ((i + 1) % 3 === 0 && i !== integerPart.length - 1) {
+                        integerWithCommas = "," + integerWithCommas;
+                    }
+                }
+
+                // 소수점과 합치기
+                var result = integerWithCommas;
+                if (decimalPart) {
+                    result += "." + decimalPart;
+                }
+
+                return result;
             }
 
+            function chooseplanPr(chooseval) {
+                var result = confirm("플랜선택하시겠습니까?");
 
-            if (sgct1chk == true) {
-                sgct = "4회"
+                if (result) {
 
-            } else if (sgct2chk == true) {
-                sgct = "8회"
-            }
+                    $('#prfullmodal').on('show.bs.modal', function (event) {  //모달오픈시 데이터전달 순서가 중요함 - 뒤에 모달 오픈!
 
-            // if (sgpr1chk == true) {
-            //     sgpr = "연습실O"
+                        // $('#mleditname').val(mbltnameval);
 
-            // } else if (sgpr2chk == true) {
-            //     sgpr = "연습실X"
-            // }
+                    });
+                    $('#prfullmodal').modal('show');
+                    let planname = "";
+                    switch (chooseval) {
+                        case "jgct":
+                            planname = "드럼레슨_정규반 [횟수제]";
+                            break;
 
-            if (sgmin1chk == true && sgct1chk == true && sgtype1chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps1_50min_4ct);
-                sgsaleprice = 200000;
-            } else if (sgmin2chk == true && sgct1chk == true && sgtype1chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps1_40min_4ct);
-                sgsaleprice = 160000;
-            } else if (sgmin1chk == true && sgct2chk == true && sgtype1chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps1_50min_8ct);
-                sgsaleprice = 400000;
-            } else if (sgmin2chk == true && sgct2chk == true && sgtype1chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps1_40min_8ct);
-                sgsaleprice = 320000;
-            } else if (sgmin1chk == true && sgct1chk == true && sgtype2chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps2_50min_4ct);
-                sgsaleprice = 130000;
-            } else if (sgmin2chk == true && sgct1chk == true && sgtype2chk == true) {
-                jgctpriceip.innerText = addCommas(sgprice_ps2_40min_4ct);
-                sgsaleprice = 130000;
-            }
+                        case "jgjg":
+                            planname = "드럼레슨_정규반 [월정기]";
+                            break;
 
+                        case "jgone":
+                            planname = "드럼레슨_단회반 [비정규]";
+                            break;
 
-            jgctperisetip.innerText = sgmin;
-            jgctmonthip.innerText = "/" + sgct;
-            saleprice.innerText = "- 연속출석_다음달 할인적용 : ";
-            pricedesc.innerText = sgtype + " , " + sgmin + " , " + sgct + " , " + sgpr;
-            saledivprice.innerText = addCommas(sgsaleprice) + "원";
-
-
-        }
-
-        function addCommas(number) {
-            // 숫자를 문자열로 변환
-            number = number.toString();
-
-            // 소수점을 분리
-            var parts = number.split(".");
-            var integerPart = parts[0];
-            var decimalPart = parts[1] || "";
-
-            // 세 자리마다 쉼표 추가
-            var integerWithCommas = "";
-            for (var i = 0; i < integerPart.length; i++) {
-                integerWithCommas = integerPart[integerPart.length - 1 - i] + integerWithCommas;
-                if ((i + 1) % 3 === 0 && i !== integerPart.length - 1) {
-                    integerWithCommas = "," + integerWithCommas;
+                    }
+                    const modaltitle = document.querySelector('.modal-title');
+                    modaltitle.innerHTML = planname + "<br><span style='color: gray; font-size: 15px;'>-> 연습보다 레슨이 우선인 분들에게 적합합니다.</span>";
+                    alert("선택한 플랜 팝업준비! - 그리고 사인원서 인쇄나 문자전송 준비")
                 }
             }
 
-            // 소수점과 합치기
-            var result = integerWithCommas;
-            if (decimalPart) {
-                result += "." + decimalPart;
-            }
-
-            return result;
-        }
-
-
-
-    </script>
+        </script>
 </body>
 
 </html>

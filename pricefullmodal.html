@@ -1,0 +1,231 @@
+<div class="modal fade" id="prfullmodal" tabindex="-1">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title chplantitle">선택된 플랜명</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>아래와 같은 플랜이 선택되었습니다.</p>
+        <div class="modalbodyalign">
+          <div class="modalmain">
+            <div class="modalcont">
+
+              <div class="container2">
+                <div>
+                  <div class="title2">레슨타입</div>
+                  <div class="title2">-</div>
+                  <div class="buttons2">
+                    <input type="radio" id="mdsgtype1" name="mdsgtype" value="50" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();" checked>
+                    <label for="mdsgtype1" class="radio-label no-select">
+                      1:1 개인
+                      <br>
+                      <span class="radio-description"> - <span style="color: gray; font-size: small;">PT</span></span>
+                    </label>
+
+                    <input type="radio" id="mdsgtype2" name="mdsgtype" value="40" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();">
+                    <label for="mdsgtype2" class="radio-label no-select">
+                      2:1 그룹
+                      <br>
+                      <span class="radio-description"> - <span style="color: gray; font-size: small;">PT</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="container2">
+                <div>
+                  <div class="title2">레슨과정</div>
+                  <div class="title2">-</div>
+                  <div class="buttons2">
+
+                    <input type="radio" id="mdsggj1" name="mdsggj" value="50" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();" checked>
+                    <label for="mdsggj1" class="radio-label2 no-select">
+                      취미
+                      <br>
+                      <span class="radio-description"> <span style="color: gray; font-size: small;"></span></span>
+                    </label>
+
+                    <input type="radio" id="mdsggj4" name="mdsggj" value="40" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();">
+                    <label for="mdsggj4" class="radio-label2 no-select">
+                      입시
+                      <br>
+                      <span class="radio-description"> <span style="color: gray; font-size: small;"></span></span>
+                    </label>
+
+                    <input type="radio" id="mdsggj3" name="mdsggj" value="40" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();">
+                    <label for="mdsggj3" class="radio-label2 no-select">
+                      전문
+                      <br>
+                      <span class="radio-description"> <span style="color: gray; font-size: small;"></span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modalcont">
+              <div class="container2">
+                <div>
+                  <div class="title2">수업시간</div>
+                  <div class="title2">-</div>
+                  <div class="buttons2">
+                    <input type="radio" id="mdsgmin1" name="mdsgmin" value="50" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();" checked>
+                    <label for="mdsgmin1" class="radio-label2 no-select">
+                      50분
+                      <br>
+                      <span class="radio-description"> <span style="color: gray; font-size: small;"></span></span>
+                    </label>
+
+                    <input type="radio" id="mdsgmin2" name="mdsgmin" value="40" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();">
+                    <label for="mdsgmin2" class="radio-label2 no-select">
+                      40분
+                      <br>
+                      <span class="radio-description"> <span style="color: gray; font-size: small;"></span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="container2">
+                <div>
+                  <div class="title2">수업횟수</div>
+                  <div class="title2">-</div>
+                  <div class="buttons2">
+
+                    <input type="radio" id="mdsgct1" name="mdsgct" value="mdweek1" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();" checked>
+                    <label for="mdsgct1" class="radio-label no-select">
+                      주1회
+                      <br>
+                      <span class="radio-description"> / <span style="color: gray; font-size: small;">총4회</span></span>
+                    </label>
+
+                    <input type="radio" id="mdsgct2" name="mdsgct" value="week2" class="opacity-0 absolute"
+                      onchange="mdsgstrjsonPr();">
+                    <label for="mdsgct2" class="radio-label no-select">
+                      주2회
+                      <br>
+                      <span class="radio-description"> / <span style="color: gray; font-size: small;">총8회</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modalchkstr">
+
+            <div class="container4">
+              <div class="title2">확인사항!!</div>
+                <div class="title2">-</div>
+
+              <div class="mdsalediv_2">
+                * 횟수제 혜택
+              </div>
+
+              <div class="mdsalediv_3div">
+                <div>
+                  <span class="">- 연속출석시_다음달 할인금액 : </span><span
+                    class="">200,000원</span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp; / ex) 4회차 수업 결시없을시
+                      - 다음재등록 할인 </span></span>
+                </div>
+
+                <div>
+                  <span class="">- 3달이상 수강시 - 영상촬영 1회 서비스제공 </span><span
+                    class="saledivprice"></span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp; / 1번 서비스이후
+                      유료로 가능 </span></span>
+                </div>
+              </div>
+
+              <div class="mdsalediv_2">
+                * 횟수제 - 확인사항
+              </div>
+
+              <div class="mdsalediv_3div">
+                <div class="mdsaledivtt">
+                  <span class="">- 횟수단위 결제 </span><span class="saledivprice"></span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp;/ ex) 4회수업_4회차
+                      결제</span></span>
+                </div>
+                <div class="mdsaledivtt">
+                  <span class="">- 당일취소_ 결시처리(1회차감) </span><span class="saledivprice"></span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp;/ 하루전까지는 취소시
+                      딜레이가능 <br>&nbsp;/ 공휴일, 원장 개인사정 휴강시 딜레이가능</span></span>
+                </div>
+
+                <div class="mdsaledivtt">
+                  <span class="">- 연습실이용_레슨시 7일가능 </span><span class="saledivprice"></span>
+                </div>
+
+                <div class="mdsaledivtt">
+                  <span class="">- 결시는 연습실 이용별도 </span><span class="saledivprice"></span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp; / 월정기전환 추천
+                    </span></span>
+                </div>
+
+                <div class="mdsaledivtt">
+                  <span class="">* 3주이상 결석시 정규반 편성제외 </span><span class="saledivprice"></span>
+                  <br>
+                  <span class="radio-description"><span style="color: gray; font-size: small;">&nbsp; / 단회반이나
+                      월정기전환 추천 </span></span>
+                </div>
+
+              </div>
+            </div>
+
+
+
+          </div>
+
+          <div class="modalchkstr2 mdpricect">
+
+            
+            <div class="container3">
+              <div>
+                <div class="title2">수강선택사항</div>
+                <div class="title2">-</div>
+                <div class="mdsaledivttct">
+                  [1:1개인] , [50분] ,
+                </div>
+                <div class="mdsaledivttct">
+                 4회 , 연습실(매일2시간) ,
+                </div>
+              </div>
+            </div>
+
+            <div class="container3">
+              <div>
+                <div class="title2">수강료</div>
+                <div class="title2">-</div>
+                <div class="">
+                  <span class="mdpricesymbol">￦&nbsp</span><span class="mdprice">240,000</span>&nbsp<span
+                    class="mdmonth">/4회</span><span class="mdperiset">[50분]</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">등록</button>
+      </div>
+    </div>
+  </div>
+</div>
