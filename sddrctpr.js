@@ -231,6 +231,8 @@ async function chkpasscd(pcchk) {
                     break;
                 } else {
                     chkrst = "chkpifaild";
+                    chkrstnm = values[i][1];
+                    chkrstlv = values[i][6];
                     break;
                 }
                 //console.log("일치항목 체크확인!:"+values[0][2]);
@@ -283,7 +285,10 @@ async function chkrtnm() {
 
 async function getCurrentTime() {
 
-    var date = new Date();
+    const now = new Date();
+    const utcNow = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    const koreaTimeDiff = 9 * 60 * 60 * 1000;
+    const date = new Date(utcNow + koreaTimeDiff);
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
     var dayOfWeek = weekdays[date.getDay()];;
     var sddrrgdate = getCurrentTimeFormatted(date, dayOfWeek);
@@ -463,6 +468,6 @@ async function checkTimePeriod(startTimeStr, endTimeStr) {
 }
 //smtbgdldvcPr("open");
 //chkpasscd();
-//getCurrentTime();
+//console.log(getCurrentTime());
 
 module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget, timestampchk };
