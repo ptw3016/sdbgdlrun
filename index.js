@@ -153,7 +153,8 @@ app.post('/tokenchk', async (req, res) => {
 
     const pschkrst = await sddrctpr.chkpasscd(pcchkinput); //
     //console.log("open2. passchkcd : " + pschkrst.chkrst);
-
+    const drchkstate = await sddrctpr.smtbgdlstatePr();
+    
     if (minutesDifference > 1) {
 
       rstmsg = "QR코드 만료";
@@ -183,11 +184,11 @@ app.post('/tokenchk', async (req, res) => {
       rstmsg = `비밀번호가 만료되었습니다. `;
       admsg = admsgplfail;
       msgsw = "errorchk2";
-      strst = ""
+      strst = "비번만료"
 
       const clpltime = await sddrctpr.getCurrentTime();
       logvalue[0][0] = clpltime;
-      logvalue[0][1] = "비번만료";
+      logvalue[0][1] = strst;
       logvalue[0][2] = pcchkinput;
       logvalue[0][3] = pschkrst.chkrstnm;
       logvalue[0][4] = pschkrst.chkrstlv;
@@ -197,7 +198,11 @@ app.post('/tokenchk', async (req, res) => {
         subject: "sdbgdl 실행시도됨!",
         message: "sdbgdl 실행시도내역----\n" +
           "시간 : " + clpltime + "\n" +
-          "시도결과 : 비밀번호 만료(입력 : " + pcchkinput + ")\n"
+          "시도결과 : " + strst + "\n" +
+          "pcchkinput : " + pcchkinput + "\n" +
+          "chkrstnm : " + pschkrst.chkrstnm + "\n" +
+          "chkrstlv : " + pschkrst.chkrstlv + "\n" +
+          "doorstate : " + drstatechk
       }
       sddrctpr.sendemailPr(sendemjson);
       sddrctpr.sddrctlogappend(logvalue);
@@ -233,7 +238,7 @@ app.post('/tokenchk', async (req, res) => {
       sddrctpr.sendemailPr(sendemjson);
       sddrctpr.sddrctlogappend(logvalue);
     }
-    const drchkstate = await sddrctpr.smtbgdlstatePr();
+    
     res.json({ message: rstmsg, admsg: admsg, msgsw: msgsw, drstate: drchkstate });
 
   } catch (e) {
