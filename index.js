@@ -161,6 +161,23 @@ app.post('/tokenchk', async (req, res) => {
       msgsw = "qrerror";
       strst = "QR코드 만료"
 
+      const clpltime = await sddrctpr.getCurrentTime();
+      logvalue[0][0] = clpltime;
+      logvalue[0][1] = "QR코드 만료";
+      logvalue[0][2] = pcchkinput;
+      logvalue[0][3] = pschkrst.chkrstnm;
+      logvalue[0][4] = pschkrst.chkrstlv;
+
+      var sendemjson = {
+        to: process.env.sdadminnvml,
+        subject: "sdbgdl 실행시도됨!",
+        message: "sdbgdl 실행시도내역----\n" +
+          "시간 : " + clpltime + "\n" +
+          "시도결과 : QR 만료(입력 : " + pcchkinput + ")\n"
+      }
+      sddrctpr.sendemailPr(sendemjson);
+      sddrctpr.sddrctlogappend(logvalue);
+
     } else if (pschkrst.chkrst == "chkpifaild") {
       const admsgplfail = `비밀번호가 만료되었습니다,<br> 재발급시 관리자에게 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
       rstmsg = `비밀번호가 만료되었습니다. `;
@@ -184,7 +201,6 @@ app.post('/tokenchk', async (req, res) => {
       }
       sddrctpr.sendemailPr(sendemjson);
       sddrctpr.sddrctlogappend(logvalue);
-      //로그 준비
 
     } else if (pschkrst.chkrst == "chkok") {
       rstmsg = "";
@@ -272,6 +288,7 @@ app.get('/submit', async (req, res) => {
       msgsw = "precheck";
       drstate = "open";
       strst = "이미열림"
+
       progress = 51;
       res.write(`data: ${progress}\n\n`);
       res.write('event: end\n\n');
@@ -290,13 +307,30 @@ app.get('/submit', async (req, res) => {
     //console.log("open3. dlopen result : " + drctrst.result);
 
     if (drctrst.result == "0002") {
-      rstmsg = "도어락에 문제가 있습니다.";
-      admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
-      msgsw = "errorchk";
-      drstate = drctrst.state;
-      strst = "0002/열기에러"
-      progress = 82;
+      //한번더 시도할때 보낼넘버..
+      progress = 81;
       res.write(`data: ${progress}\n\n`);
+
+      const drctrst2 = await sddrctpr.smtbgdldvcPr("open");
+      if (drctrst2.result == "0000") {
+        rstmsg = "도어락이 열렸습니다!!";
+        admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
+        msgsw = "check";
+        drstate = drctrst2.state;
+        strst = "열기성공"
+        progress = 100;
+        res.write(`data: ${progress}\n\n`);
+      } else if (drctrst2.result == "0002") {
+
+        rstmsg = "도어락에 문제가 있습니다.";
+        admsg = `도어락을 여는 데 실패할 경우 다시 시도하고,<br> 계속해서 열리지 않을 경우 문의해 주십시오.<br> [관리자문의-${AMPNM}]`;
+        msgsw = "errorchk";
+        drstate = drctrst.state;
+        strst = "0002/열기에러"
+        progress = 89;
+        res.write(`data: ${progress}\n\n`);
+      }
+
 
     } else if (drctrst.result == "0000") {
       rstmsg = "도어락이 열렸습니다!!";
@@ -445,16 +479,17 @@ app.post("/rstlogappend", async (req, res) => {
 
   if (rstnum == 51) {
     strst = "이미열림" //실행결과
-  } else if (rstnum == 52) {
-    strst = "0002/열기에러" //실행결과
-  } else if (rstnum == 53) {
+  } else if (rstnum == 83) {
     strst = "열기에러"
+  } else if (rstnum == 89) {
+    strst = "2번시도/열기에러"
+  } else if (rstnum == 99) {
+    strst = "2번시도/열기성공"
   } else if (rstnum == 100) {
     strst = "열기성공"
   }
 
   const pschkrst = await sddrctpr.chkpasscd(pcchkinput);
-
   const cltimecl = await sddrctpr.getCurrentTime();
   logvalue[0][0] = cltimecl;
   logvalue[0][1] = strst;
@@ -462,6 +497,20 @@ app.post("/rstlogappend", async (req, res) => {
   logvalue[0][3] = pschkrst.chkrstnm;
   logvalue[0][4] = pschkrst.chkrstlv;
   const logrst = sddrctpr.sddrctlogappend(logvalue);
+  const drstatechk = await sddrctpr.smtbgdlstatePr();
+  var sendemjson = {
+    to: process.env.sdadminnvml,
+    subject: "sdbgdl 실행시도됨!",
+    message: "sdbgdl 실행시도내역----\n" +
+      "시간 : " + cltimecl + "\n" +
+      "시도결과 : " + strst + "\n" +
+      "pcchkinput : " + pcchkinput + "\n" +
+      "chkrstnm : " + pschkrst.chkrstnm + "\n" +
+      "chkrstlv : " + pschkrst.chkrstlv + "\n" +
+      "doorstate : " + drstatechk
+  }
+  sddrctpr.sendemailPr(sendemjson);
+
   res.json({ logrst: logrst });
 });
 

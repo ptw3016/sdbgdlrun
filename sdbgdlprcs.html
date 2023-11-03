@@ -591,10 +591,10 @@
                 } else if (roundedWidth == 31) { //완료시!
                     description2 = "doorlock state check...!";
                     progressText.innerText = description2; // 텍스트 내용 변경
-                }else if (roundedWidth == 60) { //완료시!
+                } else if (roundedWidth == 60) { //완료시!
                     description2 = "doorlock state check:OK!";
                     progressText.innerText = description2; // 텍스트 내용 변경
-                }  else if (roundedWidth == 71) { //완료시!
+                } else if (roundedWidth == 71) { //완료시!
                     description2 = "doorlock open start!!";
                     progressText.innerText = description2; // 텍스트 내용 변경
                 }
@@ -635,9 +635,9 @@
                                         description = "doorlock open start!";
                                         break;
 
-                                    // case 60:
-                                    //     description = "doorlock open request : success";
-                                    //     break;
+                                    case 81:
+                                        description = "doorlock open restart!";
+                                        break;
 
                                     // case 80:
                                     //     description = "doorlock open request : faild";
@@ -650,7 +650,12 @@
                                 if (progress === 100) {
                                     logappend(progress);
                                     eventSource.close();
-                                } else if (progress === 82) {
+                                } if (progress === 99) {
+                                    progressBar.style.width = '100%';
+                                    progressBar.style.textAlign = "center";
+                                    logappend(progress);
+                                    eventSource.close();
+                                } else if (progress === 89) {
                                     logappend(progress);
                                     prbardiv.style.display = "none";
                                     clearCircles();

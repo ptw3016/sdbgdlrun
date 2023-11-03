@@ -103,16 +103,7 @@ async function smtbgdldvcPr(drctval) {     //
         }
         sendemailPr(sendemjson);
     } finally {
-        var sendemjson = {
-            to: process.env.sdadminnvml,
-            subject: "sdbgdl 실행시도됨!",
-            message: "sdbgdl 실행시도내역----\n" +
-                "시간 : " + await getCurrentTime() + "\n" +
-                "시도결과 : result:" + rstcode.result + "\n" +
-                "state:" + rstcode.state + "\n" +
-                "tryct:" + rstcode.tryct
-        }
-        sendemailPr(sendemjson);
+       
     }
 }
 
