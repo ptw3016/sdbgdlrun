@@ -2,15 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const sddrctpr = require("./sddrctpr");
+const sddsctest = require("./sddsctest");
 const app = express();
 const port = 3000;
 const path = require('path');
-const { type } = require('os');
 
 require("dotenv").config();
-
 const AMPNM = process.env.AMPNM;
-const rtnbcreate = "/:id";
 
 app.use(express.static('node_modules/bootstrap/dist'));
 app.use(bodyParser.json());
@@ -133,6 +131,7 @@ app.get("/drchkin/qrerror", async (req, res) => {
   const htmlFilePath = path.join(__dirname, 'qrerror.html');
   res.sendFile(htmlFilePath);
 });
+
 app.post('/tokenchk', async (req, res) => {
   //먼저 timestamp와 password검증하고 오케이 되면 submit 실행해서 데이터 받아올 수 있게!
 
@@ -154,7 +153,7 @@ app.post('/tokenchk', async (req, res) => {
     const pschkrst = await sddrctpr.chkpasscd(pcchkinput); //
     //console.log("open2. passchkcd : " + pschkrst.chkrst);
     const drchkstate = await sddrctpr.smtbgdlstatePr();
-    
+
     if (minutesDifference > 1) {
 
       rstmsg = "QR코드 만료";
@@ -238,7 +237,7 @@ app.post('/tokenchk', async (req, res) => {
       sddrctpr.sendemailPr(sendemjson);
       sddrctpr.sddrctlogappend(logvalue);
     }
-    
+
     res.json({ message: rstmsg, admsg: admsg, msgsw: msgsw, drstate: drchkstate });
 
   } catch (e) {
@@ -285,7 +284,6 @@ app.get('/submit', async (req, res) => {
     progress = 40;
     // Send data to the client
     res.write(`data: ${progress}\n\n`);
-
 
     if (drstatechk == "open") {
       console.log("open3. dlopen result : doorlock already open");
@@ -422,11 +420,15 @@ app.post('/sdddrclose', async (req, res) => {
     console.log("close result: " + drctclrst.result);
 
     if (drctclrst.result == "0002") {
-      rstmsg = "도어락에 문제가 있습니다.";
-      admsg = `[관리자문의-${AMPNM}]`;
-      msgsw = "errorchk";
-      drstate = drctclrst.state;
-      strst = "0002/잠금에러"
+      const drctclrst2 = await sddrctpr.smtbgdldvcPr("closed");
+      if (drctclrst2.result == "0002") {
+        rstmsg = "도어락에 문제가 있습니다.";
+        admsg = `[관리자문의-${AMPNM}]`;
+        msgsw = "errorchk";
+        drstate = drctclrst.state;
+        strst = "0002/잠금에러"
+      }
+
     } else if (drctclrst.result == "0000") {
       rstmsg = "도어락이 잠겼습니다!!";
       msgsw = "check";
@@ -564,7 +566,6 @@ async function iphtmlPr(htmlfile) {
   }
 }
 
-
 app.get('/progress', (req, res) => {
   let progress = 0;
   let interval;
@@ -603,7 +604,8 @@ app.get('/loadtest', (req, res) => {
   res.sendFile(__dirname + '/test2.html');
 });
 
-
 app.listen(port, () => {
   console.log(`sddlpr 서버 실행중...`);
 });
+
+sddsctest.sctythPr();
