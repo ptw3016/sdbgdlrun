@@ -21,8 +21,8 @@ async function sctythPr() {
         sw: "daywk",
         dayweek: [0, 1, 2, 3, 4, 5, 6], //sw-daywk
         //date: "2023-11-18",  //sw-daybook
-        hour: 15,
-        minute: 20,
+        hour: 23,
+        minute: 30,
     }
     const weekbkB = await scResult(bkjson2, async function scfunc() {
         const drstatechk = await sddrctpr.smtbgdlstatePr();
