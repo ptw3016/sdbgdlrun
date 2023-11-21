@@ -461,4 +461,4 @@ async function checkTimePeriod(startTimeStr, endTimeStr) {
 //chkpasscd();
 //console.log(getCurrentTime());
 
-module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget, timestampchk };
+module.exports = { smtbgdldvcPr, sendemailPr, chkpasscd, smtbgdlstatePr, getCurrentTime, sddrctlogappend, chkrtnm, sddrcupdate, sddrcget, timestampchk,sleep };
