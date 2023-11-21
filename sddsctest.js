@@ -25,19 +25,54 @@ async function sctythPr() {
         minute: 30,
     }
     const weekbkB = await scResult(bkjson2, async function scfunc() {
+        let chkstr = "";
+        let addprfunc = "";
+        let addprfuncrst = "";
         const drstatechk = await sddrctpr.smtbgdlstatePr();
+        if (drstatechk == "open") {
+            chkstr = "문이 열려있어서 자동잠금 실행을 시도하였습니다."
+            addprfunc = "smtbgdldvcPr";
+            addprfuncrst = await dlchkClosePr();
+
+        } else if (drstatechk == "closed") {
+            chkstr = "문이 닫혀있습니다."
+        }
+
         const etcjson = {
             prfuncnm: "drstatechk",
             prfuncrst: drstatechk,
+            prfuncmsg: chkstr,
+            addprfunc: addprfunc,
+            addprfuncrst: addprfuncrst
         }
         bkmailalram(bkjson2, etcjson);
     });
-    if(weekbkB==true){
+    if (weekbkB == true) {
         console.log("schedule book Success! Run...")
-    }else{
+    } else {
         console.log("Schedule Book Failed!")
     }
 
+}
+
+async function dlchkClosePr(){
+    const drctrst = await sddrctpr.smtbgdldvcPr("closed");
+    if (drctrst.result == "0002") {
+        const drctrst2 = await sddrctpr.smtbgdldvcPr("closed");
+        if (drctrst2.result == "0002") {
+            return "2번시도, 실행실패!(code:" + drctrst2.result + ")";
+
+        } else if (drctrst2.result == "0000") {
+            return "2번시도, 실행성공!(code:" + drctrst2.result + ")";
+        } else {
+            return "2번시도, 실행실패!(code:" + drctrst2.result + ")";
+        }
+
+    } else if (drctrst.result == "0000") {
+        return "1번만에 실행성공!(code:" + drctrst.result + ")";
+    } else {
+        return "1번시도 실행실패!(code:" + drctrst.result + ")";
+    }
 }
 
 async function scResult(bkjson, func) {
@@ -83,14 +118,22 @@ async function bkmailalram(ipjson, etcjson) {
     }
     let bkhour = ipjson.hour;
     let bkmin = ipjson.minute;
+    let rstmsgadd = "없음\n";
+    if (etcjson.prfuncrst == "open") {
+        rstmsgadd = "*추가실행함수명 : " + etcjson.addprfunc + "\n" +
+            "*추가실행함수결과 : " + etcjson.addprfuncrst + "\n";
+    }
     var sendemjson = {
         to: process.env.sdadminnvml,
         subject: "[" + ipjson.bknm + "] 시간예약 실행test!",
         message: "[" + ipjson.bknm + "] 시간예약 실행test!--------\n" +
-            "/실행함수명: " + etcjson.prfuncnm + "\n" +
-            "/실행함수결과: " + etcjson.prfuncrst + "\n" +
+            "/실행함수명 : " + etcjson.prfuncnm + "\n" +
+            "/실행함수결과 : " + etcjson.prfuncrst + "\n" +
+            "/결과메시지 : " + etcjson.prfuncmsg + "\n" +
+            "---추가실행내역---\n" +
+            rstmsgadd +
             "\n" +
-            "*예약내역 --------- \n" +
+            "*실행예약내역 --------- \n" +
             "/예약이름 : " + ipjson.bknm + "\n" +
             bkdateWkStr +
             "/예약시간 : " + addLeadingZero(bkhour) + ":" + addLeadingZero(bkmin) + "\n"
@@ -112,4 +155,4 @@ async function dayweekcv(weekarray) {
 
 //sctythPr();
 
-module.exports = {sctythPr}
+module.exports = { sctythPr }
